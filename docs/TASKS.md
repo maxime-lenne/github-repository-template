@@ -1,0 +1,7 @@
+- [ ] clean all docs
+- [ ] get issue and pr template from frizbiz
+- [x] add dependabot
+- [x] renovabot
+- [ ] changelog
+- [ ] commitlint
+- [ ] semantic version
