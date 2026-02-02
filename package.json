@@ -1,0 +1,32 @@
+{
+  "name": "github-repository-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Maxime Lenne",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "packageManager": "bun@1.1.45",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "bun run lint:md && bun run lint:yaml",
+    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore dist",
+    "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --ignore dist --fix",
+    "lint:yaml": "yamllint .",
+    "prepare": "husky",
+    "commit": "gitmoji -c"
+  },
+  "devDependencies": {
+    "gitmoji-cli": "^9.7.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "markdownlint-cli": "^0.47.0"
+  },
+  "lint-staged": {
+    "*.md": "markdownlint --fix",
+    "*.{yml,yaml}": "yamllint"
+  }
+}
