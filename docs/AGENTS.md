@@ -134,22 +134,22 @@ This project uses **Gitmoji + Commitlint** for commits. Use the interactive tool
 bun run commit
 ```
 
-Format: `:gitmoji: type: description`
+Format: `<emoji> <description>`
 
 Common gitmojis:
 
-| Code | Type | Description |
-|------|------|-------------|
-| `:sparkles:` | feat | New feature |
-| `:bug:` | fix | Bug fix |
-| `:memo:` | docs | Documentation |
-| `:art:` | style | Code style/format |
-| `:recycle:` | refactor | Refactor |
-| `:wrench:` | chore | Configuration |
-| `:white_check_mark:` | test | Add tests |
-| `:fire:` | chore | Remove code/files |
-| `:rocket:` | chore | Deploy |
-| `:lipstick:` | style | UI/style |
+| Emoji | Description |
+|-------|-------------|
+| ✨ | New feature |
+| 🐛 | Bug fix |
+| 📝 | Documentation |
+| 🎨 | Code style/format |
+| ♻️ | Refactor |
+| 🔧 | Configuration |
+| ✅ | Add tests |
+| 🔥 | Remove code/files |
+| 🚀 | Deploy |
+| 💄 | UI/style |
 
 Full list: [gitmoji.dev](https://gitmoji.dev)
 

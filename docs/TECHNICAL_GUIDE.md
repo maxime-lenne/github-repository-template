@@ -82,13 +82,11 @@ Commitlint validates commit messages against gitmoji convention:
 bun commitlint --edit "$1"
 ```
 
-Configuration in `commitlint.config.js`:
+Configuration in `commitlint.config.js` with custom gitmoji rule that validates:
 
-```javascript
-export default {
-  extends: ['gitmoji'],
-};
-```
+- Message starts with a valid gitmoji emoji
+- Message is not empty
+- Maximum header length of 100 characters
 
 ### Setup
 
