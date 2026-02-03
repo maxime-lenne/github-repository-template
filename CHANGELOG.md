@@ -1,6 +1,13 @@
-# Changelog
+## 1.0.0 (2026-02-03)
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+* :arrow_up: Bump actions/checkout from 4 to 6 ([9d57470](https://github.com/maxime-lenne/github-repository-template/commit/9d57470))
+* :wrench: chore: Add commitlint with gitmoji configuration ([477a52d](https://github.com/maxime-lenne/github-repository-template/commit/477a52d))
+* ✨ Support both gitmoji and conventional commit formats ([b4bed7b](https://github.com/maxime-lenne/github-repository-template/commit/b4bed7b))
+* 🎉 Initial commit - Repository template setup ([6c9fc72](https://github.com/maxime-lenne/github-repository-template/commit/6c9fc72))
+* 🎨 Fix markdownlint issues in README ([c4fd2f4](https://github.com/maxime-lenne/github-repository-template/commit/c4fd2f4))
+* 💄 Restore centered HTML header with markdownlint bypass ([bb07fa9](https://github.com/maxime-lenne/github-repository-template/commit/bb07fa9))
+* 📝 Clean and simplify template documentation files ([edfb979](https://github.com/maxime-lenne/github-repository-template/commit/edfb979))
+* 📝 First shot of doc without clean ([3da9e03](https://github.com/maxime-lenne/github-repository-template/commit/3da9e03))
+* 📝 Update documentation to reflect actual project stack ([3fc1c92](https://github.com/maxime-lenne/github-repository-template/commit/3fc1c92))
+* 🔧 Use unicode emoji format for gitmoji commits ([0e3b917](https://github.com/maxime-lenne/github-repository-template/commit/0e3b917))
+* add gitignore ([0b5b204](https://github.com/maxime-lenne/github-repository-template/commit/0b5b204))

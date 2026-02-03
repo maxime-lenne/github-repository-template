@@ -12,6 +12,7 @@ Detailed guide for technical implementation aspects.
 | Staged Files | lint-staged | ^16.2.7 |
 | Commit Tool | gitmoji-cli | ^9.7.0 |
 | Commit Lint | commitlint | ^20.4.1 |
+| Changelog | conventional-changelog | ^5.0.0 |
 | Markdown Lint | markdownlint-cli | ^0.47.0 |
 
 ---
@@ -121,6 +122,22 @@ Dependabot monitors:
 
 ---
 
+## Changelog
+
+Generate changelogs from commit history using gitmoji and conventional commits:
+
+```bash
+# Update changelog with new commits
+bun run changelog
+
+# Generate full changelog from scratch
+bun run changelog:init
+```
+
+The changelog is generated in `CHANGELOG.md` and groups commits by type (features, fixes, etc.).
+
+---
+
 ## Available Scripts
 
 ```bash
@@ -141,6 +158,9 @@ bun run lint:yaml
 
 # Create a commit with gitmoji
 bun run commit
+
+# Generate/update changelog
+bun run changelog
 
 # Setup husky hooks (runs automatically on install)
 bun run prepare

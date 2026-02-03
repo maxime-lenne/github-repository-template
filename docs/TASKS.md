@@ -14,7 +14,6 @@ Project task tracking.
 - [ ] get issue and pr template from frizbiz
 - [ ] add contributing
 - [ ] change github config (tags, wokflow, etc.)
-- [ ] changelog
 - [ ] .editorconfig
 - [ ] semantic version
 
@@ -23,6 +22,7 @@ Project task tracking.
 - [x] add dependabot
 - [x] renovabot
 - [x] commitlint (gitmoji)
+- [x] changelog (gitmoji + conventional)
 
 ---
 
