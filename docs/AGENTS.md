@@ -128,26 +128,28 @@ Project tracking. Key points:
 
 ### Commit Convention
 
-This project uses **Gitmoji** for commits. Use the interactive tool:
+This project uses **Gitmoji + Commitlint** for commits. Use the interactive tool:
 
 ```bash
 bun run commit
 ```
 
+Format: `:gitmoji: type: description`
+
 Common gitmojis:
 
-| Emoji | Code | Description |
-|-------|------|-------------|
-| ✨ | `:sparkles:` | New feature |
-| 🐛 | `:bug:` | Bug fix |
-| 📝 | `:memo:` | Documentation |
-| 🎨 | `:art:` | Code style/format |
-| ♻️ | `:recycle:` | Refactor |
-| 🔧 | `:wrench:` | Configuration |
-| ✅ | `:white_check_mark:` | Add tests |
-| 🔥 | `:fire:` | Remove code/files |
-| 🚀 | `:rocket:` | Deploy |
-| 💄 | `:lipstick:` | UI/style |
+| Code | Type | Description |
+|------|------|-------------|
+| `:sparkles:` | feat | New feature |
+| `:bug:` | fix | Bug fix |
+| `:memo:` | docs | Documentation |
+| `:art:` | style | Code style/format |
+| `:recycle:` | refactor | Refactor |
+| `:wrench:` | chore | Configuration |
+| `:white_check_mark:` | test | Add tests |
+| `:fire:` | chore | Remove code/files |
+| `:rocket:` | chore | Deploy |
+| `:lipstick:` | style | UI/style |
 
 Full list: [gitmoji.dev](https://gitmoji.dev)
 

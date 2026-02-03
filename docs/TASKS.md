@@ -16,13 +16,13 @@ Project task tracking.
 - [ ] change github config (tags, wokflow, etc.)
 - [ ] changelog
 - [ ] .editorconfig
-- [ ] commitlint
 - [ ] semantic version
 
 ## Completed
 
 - [x] add dependabot
 - [x] renovabot
+- [x] commitlint (gitmoji)
 
 ---
 

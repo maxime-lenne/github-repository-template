@@ -11,6 +11,7 @@ Detailed guide for technical implementation aspects.
 | Git Hooks | Husky | ^9.1.7 |
 | Staged Files | lint-staged | ^16.2.7 |
 | Commit Tool | gitmoji-cli | ^9.7.0 |
+| Commit Lint | commitlint | ^20.4.1 |
 | Markdown Lint | markdownlint-cli | ^0.47.0 |
 
 ---
@@ -70,6 +71,23 @@ Husky runs lint-staged automatically on commit:
     "*.{yml,yaml}": "yamllint"
   }
 }
+```
+
+### Commit-msg Hook
+
+Commitlint validates commit messages against gitmoji convention:
+
+```bash
+# .husky/commit-msg
+bun commitlint --edit "$1"
+```
+
+Configuration in `commitlint.config.js`:
+
+```javascript
+export default {
+  extends: ['gitmoji'],
+};
 ```
 
 ### Setup

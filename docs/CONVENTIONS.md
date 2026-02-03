@@ -135,41 +135,41 @@ refactor/component-name
 docs/update-readme
 ```
 
-### Commit Messages (Gitmoji)
+### Commit Messages (Gitmoji + Commitlint)
 
-This project uses **Gitmoji** for commit conventions:
+This project uses **Gitmoji** with **Commitlint** for commit conventions:
 
 ```bash
 # Use the interactive tool
 bun run commit
 ```
 
-Format: `<emoji> <description>`
+Format: `:gitmoji: type: description`
 
 Examples:
 
-- `✨ Add user authentication`
-- `🐛 Fix login button not responding`
-- `📝 Update README with installation steps`
-- `♻️ Refactor user service`
-- `🔧 Update eslint configuration`
+- `:sparkles: feat: Add user authentication`
+- `:bug: fix: Fix login button not responding`
+- `:memo: docs: Update README with installation steps`
+- `:recycle: refactor: Refactor user service`
+- `:wrench: chore: Update eslint configuration`
 
 Common gitmojis:
 
-| Emoji | When to use |
-|-------|-------------|
-| ✨ | New feature |
-| 🐛 | Bug fix |
-| 📝 | Documentation |
-| 🎨 | Code style/format |
-| ♻️ | Refactor |
-| 🔧 | Configuration |
-| ✅ | Add tests |
-| 🔥 | Remove code/files |
-| 🚀 | Deploy |
-| 💄 | UI/style |
-| 🎉 | Initial commit |
-| ⬆️ | Upgrade dependencies |
+| Code | Type | When to use |
+|------|------|-------------|
+| `:sparkles:` | feat | New feature |
+| `:bug:` | fix | Bug fix |
+| `:memo:` | docs | Documentation |
+| `:art:` | style | Code style/format |
+| `:recycle:` | refactor | Refactor |
+| `:wrench:` | chore | Configuration |
+| `:white_check_mark:` | test | Add tests |
+| `:fire:` | chore | Remove code/files |
+| `:rocket:` | chore | Deploy |
+| `:lipstick:` | style | UI/style |
+| `:tada:` | feat | Initial commit |
+| `:arrow_up:` | chore | Upgrade dependencies |
 
 Full reference: [gitmoji.dev](https://gitmoji.dev)
 
