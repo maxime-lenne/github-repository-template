@@ -128,30 +128,27 @@ Project tracking. Key points:
 
 ### Commit Convention
 
-This project uses **Gitmoji + Commitlint** for commits. Use the interactive tool:
+This project accepts **Gitmoji** or **Conventional Commits**:
 
 ```bash
-bun run commit
+bun run commit  # Interactive gitmoji tool
 ```
 
-Format: `<emoji> <description>`
-
-Common gitmojis:
+**Gitmoji format:** `<emoji> <description>`
 
 | Emoji | Description |
 |-------|-------------|
 | ✨ | New feature |
 | 🐛 | Bug fix |
 | 📝 | Documentation |
-| 🎨 | Code style/format |
 | ♻️ | Refactor |
 | 🔧 | Configuration |
-| ✅ | Add tests |
-| 🔥 | Remove code/files |
-| 🚀 | Deploy |
-| 💄 | UI/style |
 
-Full list: [gitmoji.dev](https://gitmoji.dev)
+**Conventional format:** `<type>(scope): <description>`
+
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+
+Full gitmoji list: [gitmoji.dev](https://gitmoji.dev)
 
 ### Fundamental Principles
 

@@ -75,17 +75,21 @@ Husky runs lint-staged automatically on commit:
 
 ### Commit-msg Hook
 
-Commitlint validates commit messages against gitmoji convention:
+Commitlint validates commit messages:
 
 ```bash
 # .husky/commit-msg
 bun commitlint --edit "$1"
 ```
 
-Configuration in `commitlint.config.js` with custom gitmoji rule that validates:
+Configuration in `commitlint.config.js` accepts two formats:
 
-- Message starts with a valid gitmoji emoji
-- Message is not empty
+- **Gitmoji**: `<emoji> <description>` (e.g., `✨ Add feature`)
+- **Conventional**: `<type>(scope): <description>` (e.g., `feat: Add feature`)
+
+Rules:
+
+- Message must match one of the formats above
 - Maximum header length of 100 characters
 
 ### Setup

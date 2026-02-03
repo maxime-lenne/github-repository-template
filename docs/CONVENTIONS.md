@@ -135,24 +135,24 @@ refactor/component-name
 docs/update-readme
 ```
 
-### Commit Messages (Gitmoji + Commitlint)
+### Commit Messages (Gitmoji or Conventional)
 
-This project uses **Gitmoji** with **Commitlint** for commit conventions:
+This project accepts **Gitmoji** or **Conventional Commits** formats:
 
 ```bash
-# Use the interactive tool
+# Use the interactive gitmoji tool
 bun run commit
 ```
 
-Format: `<emoji> <description>`
+#### Gitmoji Format
+
+`<emoji> <description>`
 
 Examples:
 
 - `✨ Add user authentication`
 - `🐛 Fix login button not responding`
 - `📝 Update README with installation steps`
-- `♻️ Refactor user service`
-- `🔧 Update eslint configuration`
 
 Common gitmojis:
 
@@ -168,10 +168,20 @@ Common gitmojis:
 | 🔥 | Remove code/files |
 | 🚀 | Deploy |
 | 💄 | UI/style |
-| 🎉 | Initial commit |
-| ⬆️ | Upgrade dependencies |
 
 Full reference: [gitmoji.dev](https://gitmoji.dev)
+
+#### Conventional Commits Format
+
+`<type>(scope): <description>`
+
+Examples:
+
+- `feat: Add user authentication`
+- `fix(auth): Fix login button not responding`
+- `docs: Update README with installation steps`
+
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 
 ---
 
