@@ -12,9 +12,7 @@ Project task tracking.
 
 - [ ] clean all docs
 - [ ] get issue and pr template from frizbiz
-- [ ] add contributing
 - [ ] change github config (tags, wokflow, etc.)
-- [ ] .editorconfig
 
 ## Completed
 
@@ -23,6 +21,8 @@ Project task tracking.
 - [x] commitlint (gitmoji)
 - [x] changelog (gitmoji + conventional)
 - [x] semantic-release (gitmoji)
+- [x] .editorconfig
+- [x] CONTRIBUTING.md
 
 ---
 
