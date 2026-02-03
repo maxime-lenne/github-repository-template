@@ -15,7 +15,6 @@ Project task tracking.
 - [ ] add contributing
 - [ ] change github config (tags, wokflow, etc.)
 - [ ] .editorconfig
-- [ ] semantic version
 
 ## Completed
 
@@ -23,6 +22,7 @@ Project task tracking.
 - [x] renovabot
 - [x] commitlint (gitmoji)
 - [x] changelog (gitmoji + conventional)
+- [x] semantic-release (gitmoji)
 
 ---
 

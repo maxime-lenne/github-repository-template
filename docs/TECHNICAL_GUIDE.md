@@ -13,6 +13,7 @@ Detailed guide for technical implementation aspects.
 | Commit Tool | gitmoji-cli | ^9.7.0 |
 | Commit Lint | commitlint | ^20.4.1 |
 | Changelog | conventional-changelog | ^5.0.0 |
+| Release | semantic-release | ^25.0.3 |
 | Markdown Lint | markdownlint-cli | ^0.47.0 |
 
 ---
@@ -135,6 +136,38 @@ bun run changelog:init
 ```
 
 The changelog is generated in `CHANGELOG.md` and groups commits by type (features, fixes, etc.).
+
+---
+
+## Semantic Release
+
+Automated versioning and releases based on commit messages:
+
+```bash
+# Run release (usually done by CI)
+bun run release
+
+# Dry run to preview release
+bun run release:dry
+```
+
+### Version Bumping
+
+Versions are determined by gitmoji:
+
+| Emoji | Version Bump |
+|-------|--------------|
+| 💥 | Major (breaking change) |
+| ✨ 🎉 | Minor (new feature) |
+| 🐛 🚑️ 🩹 ⚡️ 🔒️ 🚀 ♻️ ⬆️ ⬇️ | Patch (fix/improvement) |
+
+### CI/CD Integration
+
+Releases are automated via GitHub Actions (`.github/workflows/release.yml`):
+
+- Triggered on push to `main`
+- Creates GitHub releases with changelog
+- Updates `CHANGELOG.md` and `package.json`
 
 ---
 

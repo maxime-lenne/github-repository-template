@@ -1,0 +1,39 @@
+{
+  "branches": ["main"],
+  "plugins": [
+    [
+      "semantic-release-gitmoji",
+      {
+        "releaseRules": {
+          "major": ["💥"],
+          "minor": ["✨", "🎉"],
+          "patch": ["🐛", "🚑️", "🩹", "⚡️", "🔒️", "🚀", "♻️", "➕", "➖", "⬆️", "⬇️"]
+        },
+        "releaseNotes": {
+          "template": "{{{changelogTitle}}}\n\n{{#if compareUrl}}[Compare changes]({{compareUrl}})\n\n{{/if}}{{#each commits}}- {{#if gitmoji}}{{{gitmoji}}} {{/if}}{{{message}}} ([{{hash}}]({{commitUrl}}))\n{{/each}}",
+          "partials": {
+            "changelogTitle": "## {{#if @root.linkCompare}}[v{{version}}]({{compareUrl}}){{else}}v{{version}}{{/if}} ({{date}})"
+          },
+          "issueResolution": {
+            "template": "{baseUrl}/{owner}/{repo}/issues/{issue}",
+            "baseUrl": "https://github.com"
+          }
+        }
+      }
+    ],
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["CHANGELOG.md", "package.json"],
+        "message": "🔖 Release v${nextRelease.version}\n\n${nextRelease.notes}"
+      }
+    ],
+    "@semantic-release/github"
+  ]
+}
