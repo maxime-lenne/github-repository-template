@@ -1,4 +1,5 @@
 # GitHub Repository Template
+
 <!-- markdownlint-disable -->
 <p align="center">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" width="80" height="80" />
@@ -6,27 +7,41 @@
 </p>
 
 <p align="center">
-  <strong>GitHub repository template with preconfigured code quality tools</strong>
+  <strong>GitHub repository template with preconfigured code quality and release automation</strong>
 </p>
 
 <p align="center">
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
   <a href="https://bun.sh"><img src="https://img.shields.io/badge/Package%20Manager-Bun-black" alt="Bun" /></a>
   <a href="https://gitmoji.dev"><img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg" alt="Gitmoji" /></a>
+  <a href="https://semantic-release.gitbook.io/"><img src="https://img.shields.io/badge/semantic--release-gitmoji-e10079?logo=semantic-release" alt="semantic-release: gitmoji" /></a>
 </p>
 <!-- markdownlint-restore -->
+
 ---
 
-A ready-to-use GitHub repository template with linting, git hooks, and automatic dependency management.
+A ready-to-use GitHub repository template with linting, git hooks, automated changelog, and semantic versioning.
 
 ## Features
 
+### Code Quality
+
 - **Bun** - Fast and modern package manager
-- **Gitmoji** - Conventional commits with emojis
 - **Husky** - Automated Git hooks
 - **lint-staged** - Incremental linting on staged files
 - **Markdownlint** - Markdown file validation
 - **Yamllint** - YAML file validation
+- **EditorConfig** - Consistent coding styles across editors
+
+### Commit & Release
+
+- **Gitmoji** - Commits with emojis (`✨ Add feature`)
+- **Commitlint** - Validates commit messages (gitmoji or conventional)
+- **Changelog** - Auto-generated from commits
+- **Semantic Release** - Automated versioning and GitHub releases
+
+### Dependency Management
+
 - **Renovate** - Automatic dependency updates
 - **Dependabot** - Security alerts and updates
 
@@ -43,28 +58,41 @@ bun install
 
 ## Usage
 
-### Commits with Gitmoji
+### Commits
 
 ```bash
+# Interactive gitmoji commit
 bun run commit
 ```
 
-This launches the interactive gitmoji assistant to create commits with conventional emojis.
+Accepted formats:
+
+- **Gitmoji**: `✨ Add new feature`
+- **Conventional**: `feat(scope): Add new feature`
 
 ### Linting
 
 ```bash
-# Lint all files
-bun run lint
+bun run lint          # Lint all files
+bun run lint:md       # Lint Markdown only
+bun run lint:md:fix   # Auto-fix Markdown
+bun run lint:yaml     # Lint YAML files
+```
 
-# Lint Markdown only
-bun run lint:md
+### Changelog
 
-# Auto-fix Markdown
-bun run lint:md:fix
+```bash
+bun run changelog       # Update changelog with new commits
+bun run changelog:init  # Generate full changelog from scratch
+```
 
-# Lint YAML files
-bun run lint:yaml
+### Release
+
+Releases are automated via GitHub Actions on push to `main`. Manual release:
+
+```bash
+bun run release:dry   # Preview release
+bun run release       # Execute release
 ```
 
 ### Git Hooks
@@ -72,52 +100,46 @@ bun run lint:yaml
 Hooks are automatically configured via Husky:
 
 - **pre-commit**: Runs lint-staged on modified files
+- **commit-msg**: Validates commit message format
 
-## Sommaire de la documentation
+## Version Bumping
 
-| Fichier | Purpose | Description |
-|---------|---------|-------------|
-| [`AGENTS.md`](./AGENTS.md) | Guide IA | Ce fichier - conventions et règles pour les agents IA |
-| [`PROJECT_STRUCTURE.md`](./PROJECT_STRUCTURE.md) | Architecture | Organisation des répertoires et fichiers du projet |
-| [`CONVENTIONS.md`](./CONVENTIONS.md) | Code style | Conventions de nommage, style de code, git |
-| [`TECHNICAL_GUIDE.md`](./TECHNICAL_GUIDE.md) | Implémentation | API, CI/CD, performance, sécurité, tests |
-| [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) | UI/UX | Couleurs, typographie, spacing, accessibilité |
-| [`COMPONENT_REFERENCE.md`](./COMPONENT_REFERENCE.md) | Composants | Référence technique des composants UI |
-| [`FEATURES.md`](./FEATURES.md) | Fonctionnalités | Epics, user stories, statut des features |
-| [`SCREEN_FLOW.md`](./SCREEN_FLOW.md) | Navigation | Flux d'écrans et parcours utilisateur |
-| [`TASKS.md`](./TASKS.md) | Tâches | Suivi des tâches et backlog |
+Versions are determined automatically by commit emojis:
 
-## Configuration
+| Emoji | Version Bump | Example |
+|-------|--------------|---------|
+| 💥 | Major | Breaking changes |
+| ✨ 🎉 | Minor | New features |
+| 🐛 🚑️ ⚡️ 🔒️ | Patch | Fixes, performance, security |
 
-### Gitmoji
+## Documentation
 
-The `.gitmoji.json` file configures gitmoji-cli behavior:
+| File | Description |
+|------|-------------|
+| [`docs/AGENTS.md`](docs/AGENTS.md) | AI assistant guide and conventions |
+| [`docs/CONVENTIONS.md`](docs/CONVENTIONS.md) | Code style and git conventions |
+| [`docs/TECHNICAL_GUIDE.md`](docs/TECHNICAL_GUIDE.md) | Technical implementation details |
+| [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md) | Directory and file organization |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines |
+| [`CHANGELOG.md`](CHANGELOG.md) | Version history |
 
-- `emojiFormat: "emoji"` - Uses actual emojis (not codes)
-- `capitalizeTitle: true` - Capitalizes the first letter of the message
-- `scopePrompt: false` - No scope prompt
+## Configuration Files
 
-### Renovate
-
-Renovate is configured to:
-
-- Group minor and patch updates
-- Auto-merge patches for devDependencies
-- Run updates on Monday morning (Europe/Paris)
-
-### Dependabot
-
-Dependabot monitors:
-
-- Bun dependencies (via package.json)
-- GitHub Actions
+| File | Purpose |
+|------|---------|
+| `.gitmoji.json` | Gitmoji-cli settings |
+| `.releaserc.json` | Semantic-release config |
+| `.markdownlint.json` | Markdown linting rules |
+| `.yamllint.yml` | YAML linting rules |
+| `.editorconfig` | Editor settings |
+| `commitlint.config.js` | Commit message validation |
 
 ## Customization
 
 1. Update `package.json` with your project name
 2. Modify linting rules according to your needs
 3. Adjust Renovate/Dependabot configuration
-4. Delete this README and create your own
+4. Update or replace this README
 
 ## License
 
