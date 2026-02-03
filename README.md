@@ -73,22 +73,19 @@ Hooks are automatically configured via Husky:
 
 - **pre-commit**: Runs lint-staged on modified files
 
-## Project Structure
+## Sommaire de la documentation
 
-```text
-.
-├── .github/
-│   ├── dependabot.yml    # Dependabot configuration
-│   └── workflows/
-│       └── lint.yml      # CI for linting
-├── .husky/
-│   └── pre-commit        # Pre-commit hook
-├── .gitmoji.json         # Gitmoji configuration
-├── .markdownlint.json    # Markdownlint rules
-├── .yamllint.yml         # Yamllint rules
-├── renovate.json         # Renovate configuration
-└── package.json          # Dependencies and scripts
-```
+| Fichier | Purpose | Description |
+|---------|---------|-------------|
+| [`AGENTS.md`](./AGENTS.md) | Guide IA | Ce fichier - conventions et règles pour les agents IA |
+| [`PROJECT_STRUCTURE.md`](./PROJECT_STRUCTURE.md) | Architecture | Organisation des répertoires et fichiers du projet |
+| [`CONVENTIONS.md`](./CONVENTIONS.md) | Code style | Conventions de nommage, style de code, git |
+| [`TECHNICAL_GUIDE.md`](./TECHNICAL_GUIDE.md) | Implémentation | API, CI/CD, performance, sécurité, tests |
+| [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) | UI/UX | Couleurs, typographie, spacing, accessibilité |
+| [`COMPONENT_REFERENCE.md`](./COMPONENT_REFERENCE.md) | Composants | Référence technique des composants UI |
+| [`FEATURES.md`](./FEATURES.md) | Fonctionnalités | Epics, user stories, statut des features |
+| [`SCREEN_FLOW.md`](./SCREEN_FLOW.md) | Navigation | Flux d'écrans et parcours utilisateur |
+| [`TASKS.md`](./TASKS.md) | Tâches | Suivi des tâches et backlog |
 
 ## Configuration
 
