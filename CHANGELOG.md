@@ -1,5 +1,7 @@
 ## 1.0.0 (2026-02-03)
 
+## 1.0.0 (2026-02-03)
+
 * :arrow_up: Bump actions/checkout from 4 to 6 ([9d57470](https://github.com/maxime-lenne/github-repository-template/commit/9d57470))
 * :wrench: chore: Add commitlint with gitmoji configuration ([477a52d](https://github.com/maxime-lenne/github-repository-template/commit/477a52d))
 * ✨ Support both gitmoji and conventional commit formats ([b4bed7b](https://github.com/maxime-lenne/github-repository-template/commit/b4bed7b))
