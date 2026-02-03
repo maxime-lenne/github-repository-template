@@ -5,8 +5,12 @@
     "code_blocks": false,
     "tables": false
   },
+  "MD024": false,
   "MD033": {
     "allowed_elements": ["details", "summary", "img", "br"]
   },
-  "MD041": false
+  "MD036": false,
+  "MD040": false,
+  "MD041": false,
+  "MD060": false
 }

@@ -1,313 +1,195 @@
-# Conventions de Développement
+# AI Agents Guide
 
-Guide des conventions et bonnes pratiques pour le développement du site portfolio.
+Complete guide for AI assistants working on this repository.
 
-## 🎯 Stack Technique
+## Documentation Index
 
-### Technologies principales
-- **Jekyll 4.3.x** - Générateur de site statique
-- **Ruby 3.3.5** - Runtime (géré par asdf)
-- **Node.js 22.11.0 LTS** - Pipeline d'assets
-- **Notion API** - Gestion de contenu
-- **GitHub Pages** - Hébergement
-- **GitHub Actions** - CI/CD
-
-### Plugins Jekyll essentiels
-```ruby
-gem "jekyll-feed"          # Flux RSS/Atom
-gem "jekyll-sitemap"       # Sitemap XML
-gem "jekyll-seo-tag"       # Optimisation SEO
-gem "jekyll-paginate"      # Pagination blog
-gem "jekyll-compress-images" # Optimisation images
-gem "jekyll-minifier"      # Compression HTML/CSS/JS
-```
-
-## 📁 Structure du Projet
-
-```
-maxime-lenne-website/
-├── _config.yml              # Configuration Jekyll
-├── _config.dev.yml          # Overrides développement
-├── _data/                   # Données statiques
-│   ├── translations.yml     # Traductions FR/EN
-│   └── experiences.yml     # Données Notion
-├── _includes/               # Composants réutilisables
-│   ├── components/         # Composants UI
-│   └── sections/          # Sections de page
-├── _layouts/               # Templates de pages
-├── _sass/                 # Styles SCSS
-│   ├── _variables.scss    # Design tokens
-│   ├── components/        # Styles composants
-│   └── utilities/         # Classes utilitaires
-├── _plugins/              # Plugins personnalisés
-├── assets/                # Assets statiques
-├── _collections/          # Collections de contenu
-└── docs/                  # Documentation
-```
-
-## 🌐 Support Multi-langue
-
-### Configuration
-```yaml
-# _config.yml
-languages: ["fr", "en"]
-default_lang: "fr"
-exclude_from_localizations: ["javascript", "images", "css", "assets"]
-```
-
-### Convention de nommage
-- **Français (défaut)** : `page.md` ou `page/index.md`
-- **Anglais** : `page.en.md` ou `page/index.en.md`
-- **Traductions** : Stockées dans `_data/translations.yml`
-
-## 🎨 Architecture CSS/SCSS
-
-### Méthodologie BEM
-```scss
-// Structure des classes
-.block__element--modifier
-
-// Exemples
-.card__title--highlight
-.button--primary
-.nav__item--active
-```
-
-### Variables CSS
-```scss
-// _sass/_variables.scss
-:root {
-  // Couleurs
-  --color-primary: #2563eb;
-  --color-secondary: #64748b;
-  
-  // Typographie
-  --font-sans: system-ui, -apple-system, sans-serif;
-  --font-mono: 'SF Mono', Monaco, monospace;
-  
-  // Espacement
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 3rem;
-}
-```
-
-## 🔌 Intégration Notion CMS
-
-### Plugin Notion
-Le plugin `_plugins/notion_fetcher.rb` permet d'importer automatiquement les données depuis Notion.
-
-### Types de contenu
-1. **Base de données Skills** (implémenté)
-   - Nom, Niveau, Années, Ordre, Featured
-   - Relation vers Categories, Rollups (Category, Icon, Color)
-   - Utilisé dans `resume.md`
-
-2. **Base de données Categories** (implémenté)
-   - Nom, Relations parent/enfant, Icône, Couleur, Ordre
-   - Géré automatiquement via les rollups
-   - Utilisé pour organiser les skills
-
-3. **Base de données Expériences** (à implémenter)
-   - Entreprise, Rôle, Période, Description, Technologies
-   - Statut : Publié/Brouillon
-   - Langue : FR/EN
-
-4. **Base de données Articles** (optionnel)
-   - Titre, Contenu, Date de publication, Tags
-   - SEO Meta, Image mise en avant
-
-### Variables d'environnement
-```bash
-# .env (non commité)
-NOTION_TOKEN=secret_xxx
-NOTION_SKILLS_DB=xxx
-NOTION_EXPERIENCES_DB=xxx
-NOTION_POSTS_DB=xxx
-# Note: Les catégories sont récupérées automatiquement via les rollups
-```
-
-### Utilisation des données
-```liquid
-<!-- Skills depuis Notion -->
-{% assign notion_skills = site.data.notion_skills %}
-{% for skill_category in notion_skills %}
-  <h3>{{ skill_category[1].title }}</h3>
-  {% for skill in skill_category[1].skills %}
-    <span data-level="{{ skill.level }}" 
-          title="{{ skill.name }}{% if skill.years %} - {{ skill.years }} ans d'expérience{% endif %}">
-      {% if skill.icon %}{{ skill.icon }} {% endif %}{{ skill.name }}
-    </span>
-  {% endfor %}
-{% endfor %}
-```
-
-## 🚀 Workflow de Développement
-
-### Processus quotidien
-1. **Pull** : `git pull origin main`
-2. **Vérifier sync Notion** : Contenu à jour
-3. **Serveur dev** : `make serve`
-4. **Modifications** : Suivre les conventions
-5. **Tests** : Vérifier les deux langues, responsive
-6. **Documentation** : Mettre à jour si nécessaire
-7. **Commit** : Format conventionnel
-
-### Convention de commits
-```
-type(scope): description
-
-Types: feat, fix, docs, style, refactor, test, chore
-Scopes: notion, i18n, seo, perf, ci, content
-
-Exemples:
-feat(notion): ajout sync automatique des projets
-fix(i18n): correction traduction navigation française
-docs(readme): mise à jour instructions setup
-```
-
-## 🧪 Tests et Qualité
-
-### Checklist pré-commit
-- [ ] Code suit les guidelines BEM et SCSS
-- [ ] Les deux langues testées (FR/EN)
-- [ ] Aucun lien cassé (`bundle exec htmlproofer ./_site`)
-- [ ] Images optimisées et responsives
-- [ ] Score Lighthouse > 95
-- [ ] Documentation mise à jour
-- [ ] Message de commit suit la convention
-
-### Commandes de test
-```bash
-# Tests locaux
-bundle exec jekyll build --config _config.yml,_config_prod.yml
-bundle exec htmlproofer ./_site --disable-external
-lighthouse --output=html --output-path=./lighthouse-report.html http://localhost:4000
-```
-
-## 📋 Performance et SEO
-
-### Objectifs de performance
-- **Score Lighthouse** : 95+ (toutes catégories)
-- **Core Web Vitals** : Vert pour toutes les métriques
-- **First Contentful Paint** : < 1.5s
-- **Largest Contentful Paint** : < 2.5s
-- **Cumulative Layout Shift** : < 0.1
-
-### Optimisation des images
-- Format WebP avec fallbacks
-- Images responsives avec srcset
-- Lazy loading implémenté
-- Compression automatique
-
-## 🔧 Commandes Utiles
-
-### Développement
-```bash
-# Serveur de développement
-make serve
-
-# Build production
-make production
-
-# Tests
-make test
-
-# Nettoyage
-make clean
-```
-
-### Optimisation des assets
-```bash
-# Optimiser les images
-npm run optimize:images
-
-# Minifier les assets
-npm run minify:assets
-
-# Générer les favicons
-npm run generate:favicons
-```
-
-## 🤖 Instructions pour les Assistants IA
-
-### Principes fondamentaux
-- **Consulter** `docs/AGENTS.md` pour les guidelines complètes
-- **Prioriser** performance et accessibilité
-- **Tester** les deux langues avant toute modification
-- **Mettre à jour** la documentation lors des changements
-- **Suivre** la méthodologie BEM pour le CSS
-
-### Préférences de génération
-- **CSS** : Fonctionnalités modernes, BEM, éviter la complexité
-- **JavaScript** : ES6+, amélioration progressive
-- **HTML** : Balisage sémantique et accessible
-- **Ruby** : Suivre les guides de style Jekyll et Ruby
-
-# Documentation du Projet
-
-Guide complet de la documentation de l'application.
-
-## 📚 Guides Principaux
-
-- **`AGENTS.md`** - Guide principal pour les assistants IA
-- **`../CLAUDE.md`** - redirige vers `AGENTS.md`
-- **`PROJECT_STRUCTURE.md`** - Structure détaillée du projet
-- **`CONVENTIONS.md`** - pour les guidelines et quide technique avancé
-- **`FEATURES.md`** - pour la liste des Epics et users story de l'applications
-- **`SCREEN_FLOW.md`** - enchaînement des écrans de l'application
-- **`DESIGN_SYSTEM.md`** - Système de design et conventions UI
-
-### Rapports et Conformité
-- **`CONFORMITY_REPORT.md`** - Rapport de conformité actuel
-
-
-## 📋 Checklist de Documentation
-
-### Avant de Contribuer
-- [ ] Lire `AGENTS.md` pour comprendre le projet
-- [ ] Consulter `CONVENTIONS.md` pour les guidelines
-- [ ] Vérifier `CONFORMITY_REPORT.md` pour l'état actuel
-
-### Pendant le Développement
-- [ ] Suivre les conventions dans `AGENTS.md`
-- [ ] Respecter le design system dans `DESIGN_SYSTEM.md`
-- [ ] Tester selon les guidelines dans `TECHNICAL_GUIDE.md`
-
-### Après les Modifications
-- [ ] Mettre à jour la documentation si nécessaire
-- [ ] Vérifier la conformité avec `CONFORMITY_REPORT.md`
-- [ ] Tester les langues
-
-## 🔗 Liens Utiles
-
-### Documentation Externe
-
-
-### Ressources du Projet
-- **Repository** : [n8ninja-ios](https://github.com/maxime-lenne/n8ninja-ios)
-- **Issues** : [GitHub Issues](https://github.com/maxime-lenne/n8ninja-ios/issues)
-- **Site du projet** : [n8n-ninja.app](https://n8n-ninja.app/)
-- **Repository du site** : [n8ninja-website](https://github.com/maxime-lenne/n8ninja-website)
-
-
-## 📝 Mise à Jour de la Documentation
-
-### Quand Mettre à Jour
-- Ajout de nouvelles fonctionnalités
-- Modification des conventions
-- Changement de l'architecture
-- Mise à jour des dépendances
-
-### Comment Mettre à Jour
-1. Identifier le fichier concerné
-2. Mettre à jour les sections pertinentes
-3. Vérifier la cohérence avec les autres fichiers
-4. Tester les exemples de code
-5. Mettre à jour la date de dernière modification
+| File | Purpose | Description |
+|------|---------|-------------|
+| [`AGENTS.md`](./AGENTS.md) | AI Guide | This file - conventions and rules for AI agents |
+| [`PROJECT_STRUCTURE.md`](./PROJECT_STRUCTURE.md) | Architecture | Directory and file organization |
+| [`CONVENTIONS.md`](./CONVENTIONS.md) | Code style | Naming conventions, code style, git |
+| [`TECHNICAL_GUIDE.md`](./TECHNICAL_GUIDE.md) | Implementation | API, CI/CD, performance, security, tests |
+| [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) | UI/UX | Colors, typography, spacing, accessibility |
+| [`COMPONENT_REFERENCE.md`](./COMPONENT_REFERENCE.md) | Components | Technical reference for UI components |
+| [`FEATURES.md`](./FEATURES.md) | Features | Epics, user stories, feature status |
+| [`SCREEN_FLOW.md`](./SCREEN_FLOW.md) | Navigation | Screen flows and user journeys |
+| [`TASKS.md`](./TASKS.md) | Tasks | Task tracking and backlog |
 
 ---
 
-*Dernière mise à jour : Décembre 2024*
+## Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Package Manager | Bun |
+| Node Version | >= 22.11.0 |
+| Git Hooks | Husky + lint-staged |
+| Commit Convention | Gitmoji |
+| Linting | markdownlint, yamllint |
+| Dependency Updates | Renovate, Dependabot |
+| CI/CD | GitHub Actions |
+
+### Available Commands
+
+```bash
+bun install           # Install dependencies
+bun run lint          # Lint markdown and yaml
+bun run lint:md       # Lint markdown only
+bun run lint:md:fix   # Auto-fix markdown
+bun run lint:yaml     # Lint yaml files
+bun run commit        # Interactive gitmoji commit
+```
+
+---
+
+## File Summaries
+
+### PROJECT_STRUCTURE.md
+
+Project structure with source/tests/docs organization. Key points:
+
+- Root files: package.json, CLAUDE.md, README.md
+- `.github/`: workflows, issue templates, PR template
+- `docs/`: all documentation files
+- `node_modules/`: dependencies (managed by Bun)
+
+### CONVENTIONS.md
+
+Development conventions. Key points:
+
+- **Naming**: files kebab-case, classes PascalCase, functions camelCase, constants UPPER_SNAKE_CASE
+- **CSS**: BEM (block__element--modifier), CSS variables
+- **Git branches**: feature/fix/refactor/docs
+- **Commits**: Gitmoji convention (emoji + description)
+
+### TECHNICAL_GUIDE.md
+
+Technical implementation guide. Key points:
+
+- **CI/CD**: GitHub Actions workflows (lint on push/PR)
+- **Pre-commit**: Husky runs lint-staged automatically
+- **Dependency management**: Renovate (weekly) + Dependabot (security)
+
+### DESIGN_SYSTEM.md
+
+UI/UX design system. Key points:
+
+- **Colors**: primary, secondary, semantic (success/warning/error/info)
+- **Typography**: system fonts, size scale
+- **Spacing**: consistent scale
+- **Accessibility**: WCAG 2.1 AA target
+
+### COMPONENT_REFERENCE.md
+
+Component documentation. Key points:
+
+- **Structure**: components organized by type
+- **Props**: types and defaults documented
+- **Best practices**: composition, accessibility
+
+### FEATURES.md
+
+Feature management. Key points:
+
+- Organization by epics with user stories
+- Format: "As a user, I want to [action] so that [benefit]"
+- Statuses: Done, In Progress, Planned
+
+### SCREEN_FLOW.md
+
+Navigation and user flows. Key points:
+
+- Flow diagrams between screens
+- Entry/Exit points for each screen
+
+### TASKS.md
+
+Project tracking. Key points:
+
+- Current sprint, Backlog, Completed
+- Markdown checklist format
+
+---
+
+## AI Agent Specific Rules
+
+### Language Rule
+
+**All written content must be in English**, regardless of the user's prompt language:
+
+- Documentation (markdown files, comments)
+- Commit messages
+- Tasks and subtasks
+- Epics and user stories
+- Code comments and JSDoc
+- Variable and function names
+- Error messages and logs
+
+### Commit Convention
+
+This project uses **Gitmoji** for commits. Use the interactive tool:
+
+```bash
+bun run commit
+```
+
+Common gitmojis:
+
+| Emoji | Code | Description |
+|-------|------|-------------|
+| ✨ | `:sparkles:` | New feature |
+| 🐛 | `:bug:` | Bug fix |
+| 📝 | `:memo:` | Documentation |
+| 🎨 | `:art:` | Code style/format |
+| ♻️ | `:recycle:` | Refactor |
+| 🔧 | `:wrench:` | Configuration |
+| ✅ | `:white_check_mark:` | Add tests |
+| 🔥 | `:fire:` | Remove code/files |
+| 🚀 | `:rocket:` | Deploy |
+| 💄 | `:lipstick:` | UI/style |
+
+Full list: [gitmoji.dev](https://gitmoji.dev)
+
+### Fundamental Principles
+
+1. **Read before modifying** - Always read a file before proposing changes
+2. **Consult documentation** - Check relevant docs/ files before any task
+3. **Respect existing patterns** - Follow the style and conventions already in place
+4. **Minimize changes** - Only modify what is necessary
+5. **Document changes** - Update docs if behavior changes
+
+### Code Generation Preferences
+
+| Language | Preferences |
+|----------|-------------|
+| **Markdown** | Follow markdownlint rules, no trailing spaces |
+| **YAML** | Follow yamllint rules, consistent indentation |
+| **JavaScript** | ES6+, no unnecessary dependencies |
+| **TypeScript** | Strict types, explicit interfaces, avoid `any` |
+
+### Pre-commit Checklist
+
+- [ ] Code passes `bun run lint`
+- [ ] Documentation updated if necessary
+- [ ] Commit uses gitmoji convention
+- [ ] No secrets or sensitive data
+
+### Behaviors to Avoid
+
+- Do not create unnecessary files
+- Do not add dependencies without justification
+- Do not modify project structure without discussion
+- Do not ignore linting errors
+- Do not comment out dead code, delete it
+
+### Priorities
+
+1. **Functionality** - Code must work correctly
+2. **Readability** - Code must be understandable
+3. **Consistency** - Follow existing patterns
+4. **Simplicity** - Avoid over-engineering
+
+---
+
+*Last updated: 2026-02-03*

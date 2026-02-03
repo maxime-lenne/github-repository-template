@@ -1,302 +1,194 @@
-# Guide Technique Avancé
+# Technical Guide
 
-Guide détaillé pour les aspects techniques avancés du projet.
+Detailed guide for technical implementation aspects.
 
-## 🔌 Intégration Notion CMS
+## Tech Stack
 
-### Configuration de l'API
-```ruby
-# _plugins/notion_fetcher.rb
-module Jekyll
-  class NotionDataGenerator < Generator
-    safe true
-    priority :highest
+| Category | Technology | Version |
+|----------|------------|---------|
+| Package Manager | Bun | >= 1.1.45 |
+| Node | Node.js | >= 22.11.0 |
+| Git Hooks | Husky | ^9.1.7 |
+| Staged Files | lint-staged | ^16.2.7 |
+| Commit Tool | gitmoji-cli | ^9.7.0 |
+| Markdown Lint | markdownlint-cli | ^0.47.0 |
 
-    def generate(site)
-      return unless ENV['NOTION_TOKEN']
-      
-      fetch_experiences(site)
-      fetch_blog_posts(site) if ENV['NOTION_POSTS_DB']
-    end
+---
 
-    private
+## CI/CD
 
-    def fetch_experiences(site)
-      # Récupération des expériences depuis Notion
-      # Stockage dans site.data['experiences']
-    end
+### Lint Workflow
 
-    def fetch_blog_posts(site)
-      # Récupération des articles depuis Notion
-      # Stockage dans site.data['posts']
-    end
-  end
-end
-```
+The project runs linting on every push and PR to `main`:
 
-### Variables d'environnement
-```bash
-# .env (non commité)
-NOTION_TOKEN=secret_xxx
-NOTION_EXPERIENCES_DB=xxx
-NOTION_POSTS_DB=xxx
-```
-
-### Structure des données Notion
 ```yaml
-# _data/experiences.yml (généré automatiquement)
-experiences:
-  - id: "exp-001"
-    company: "Nom de l'entreprise"
-    role: "CTO"
-    period: "2020-2024"
-    description: "Description de l'expérience"
-    technologies: ["Ruby", "Jekyll", "Notion API"]
-    status: "published"
-    lang: "fr"
-```
+# .github/workflows/lint.yml
+name: Lint
 
-## 🚀 GitHub Actions CI/CD
-
-### Workflow principal
-```yaml
-# .github/workflows/build-deploy.yml
-name: Build and Deploy
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: '0 6 * * *'  # Sync Notion quotidien
-  workflow_dispatch:
+  pull_request:
+    branches: [main]
 
 jobs:
-  build-deploy:
+  markdownlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup asdf
-        uses: asdf-vm/actions/setup@v3
-        
-      - name: Install dependencies
-        run: |
-          asdf install
-          bundle install
-          npm install
-          
-      - name: Fetch Notion content
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-        run: bundle exec jekyll build --config _config.yml,_config_prod.yml
-        
-      - name: Optimize assets
-        run: |
-          npm run optimize:images
-          npm run minify:assets
-          
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run lint:md
+
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: pip install yamllint
+      - run: yamllint .
 ```
 
-### Workflows supplémentaires
-- **PR Checks** : Lighthouse CI, liens cassés, vérification orthographique
-- **Sécurité** : Dependabot, analyse CodeQL
-- **Performance** : Surveillance de la taille des bundles
+### Additional Workflows (Future)
 
-## 🔍 SEO et Performance
+- **PR Checks** - Tests, type checking
+- **Security** - CodeQL analysis
+- **Deploy** - Automated deployment
 
-### Configuration SEO
-```yaml
-# _config.yml
-plugins:
-  - jekyll-seo-tag
+---
 
-# Valeurs SEO par défaut
-title: "Maxime Lenne - CTO & Tech Product Leader"
-description: "Expert en entrepreneuriat tech, innovation et développement produit"
-url: "https://maxime-lenne.github.io"
-author:
-  name: "Maxime Lenne"
-  twitter: "MaximeLenne"
-  
-social:
-  name: "Maxime Lenne"
-  links:
-    - "https://twitter.com/MaximeLenne"
-    - "https://linkedin.com/in/maximelenne"
-    - "https://github.com/maxime-lenne"
+## Git Hooks
+
+### Pre-commit Hook
+
+Husky runs lint-staged automatically on commit:
+
+```json
+// package.json
+{
+  "lint-staged": {
+    "*.md": "markdownlint --fix",
+    "*.{yml,yaml}": "yamllint"
+  }
+}
 ```
 
-### Objectifs de performance
-- **Score Lighthouse** : 95+ (toutes catégories)
-- **Core Web Vitals** : Vert pour toutes les métriques
-- **First Contentful Paint** : < 1.5s
-- **Largest Contentful Paint** : < 2.5s
-- **Cumulative Layout Shift** : < 0.1
+### Setup
 
-### Optimisation des images
-```ruby
-# _plugins/image_optimizer.rb
-# Génération automatique WebP avec fallbacks
-# Images responsives avec srcset
-# Implémentation du lazy loading
-```
+Hooks are configured automatically via the `prepare` script:
 
-## 🛡 Sécurité et Bonnes Pratiques
-
-### Headers de sécurité
-```yaml
-# _headers (Netlify) ou via plugin Jekyll
-/*
-  X-Frame-Options: DENY
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
-```
-
-### Content Security Policy
-```html
-<!-- Dans _includes/head.html -->
-<meta http-equiv="Content-Security-Policy" 
-      content="default-src 'self'; 
-               img-src 'self' data: https:; 
-               script-src 'self' 'unsafe-inline';
-               style-src 'self' 'unsafe-inline';">
-```
-
-### Gestion des environnements
-- **Développement** : Utiliser le fichier `.env` (non commité)
-- **Production** : GitHub Secrets pour les données sensibles
-- **Clés API** : Rotation régulière, accès au minimum requis
-
-## 🧪 Tests et Qualité
-
-### Outils de test
 ```bash
-# Tests locaux
-bundle exec jekyll build --config _config.yml,_config_prod.yml
-bundle exec htmlproofer ./_site --disable-external
-lighthouse --output=html --output-path=./lighthouse-report.html http://localhost:4000
-```
-
-### Tests d'accessibilité
-- **Automatisé** : axe-core dans CI/CD
-- **Manuel** : Tests avec lecteur d'écran
-- **Contraste des couleurs** : Ratio minimum 4.5:1
-- **Navigation clavier** : Site entièrement accessible
-
-### Checklist de qualité
-- [ ] Code suit les guidelines de style
-- [ ] Toutes les langues testées (FR/EN)
-- [ ] Aucun lien cassé
-- [ ] Images optimisées et responsives
-- [ ] Score Lighthouse > 95
-- [ ] Documentation mise à jour
-- [ ] Message de commit suit la convention
-
-## 📋 Gestion des Issues GitHub
-
-### Templates d'issues
-
-#### Template Feature Request
-```markdown
-## Description de la fonctionnalité
-Description brève de la fonctionnalité
-
-## User Story
-En tant que [type d'utilisateur], je veux [fonctionnalité] afin que [bénéfice]
-
-## Critères d'acceptation
-- [ ] Critère 1
-- [ ] Critère 2
-
-## Considérations techniques
-- Intégration Notion requise : Oui/Non
-- Support multi-langue : Oui/Non
-- Impact performance : Faible/Moyen/Élevé
-
-## Labels
-enhancement, notion-sync, i18n, performance
-```
-
-#### Template Bug Report
-```markdown
-## Description du bug
-Description claire du problème
-
-## Étapes pour reproduire
-1. Aller à...
-2. Cliquer sur...
-3. Voir l'erreur
-
-## Comportement attendu
-Ce qui devrait se passer
-
-## Comportement actuel
-Ce qui se passe réellement
-
-## Environnement
-- Navigateur : [Chrome/Firefox/Safari]
-- Appareil : [Desktop/Mobile]
-- URL : [page spécifique]
-
-## Labels
-bug, needs-investigation
-```
-
-### Labels du projet
-- **Type** : `enhancement`, `bug`, `documentation`, `refactor`
-- **Priorité** : `critical`, `high`, `medium`, `low`
-- **Zone** : `notion-sync`, `i18n`, `performance`, `seo`, `design`
-- **Statut** : `needs-review`, `in-progress`, `blocked`, `ready-to-deploy`
-
-## 🔧 Commandes Avancées
-
-### Développement
-```bash
-# Serveur de développement avec configuration spécifique
-bundle exec jekyll serve --config _config.yml,_config.dev.yml --livereload
-
-# Build avec sync Notion
-NOTION_TOKEN=xxx bundle exec jekyll build --config _config.yml,_config_prod.yml
-
-# Tests de performance
-lighthouse --output=html --output-path=./report.html https://maxime-lenne.github.io
-```
-
-### Optimisation des assets
-```bash
-# Optimiser les images
-npm run optimize:images
-
-# Minifier les assets
-npm run minify:assets
-
-# Générer les favicons
-npm run generate:favicons
-
-# Audit de sécurité
-bundle audit
-npm audit
-```
-
-### Maintenance
-```bash
-# Mettre à jour les dépendances
-bundle update
-npm update
-
-# Audit de sécurité
-bundle audit
-npm audit
-
-# Audit de performance
-lighthouse --output=html --output-path=./report.html https://maxime-lenne.github.io
+bun install  # Runs "husky" automatically
 ```
 
 ---
 
-*Dernière mise à jour : Décembre 2024*
+## Dependency Management
+
+### Renovate
+
+Renovate is configured to:
+
+- Group minor and patch updates
+- Auto-merge patches for devDependencies
+- Run updates on Monday morning (Europe/Paris timezone)
+
+### Dependabot
+
+Dependabot monitors:
+
+- Bun dependencies (via package.json)
+- GitHub Actions versions
+
+---
+
+## Available Scripts
+
+```bash
+# Install dependencies
+bun install
+
+# Lint all files
+bun run lint
+
+# Lint markdown only
+bun run lint:md
+
+# Auto-fix markdown issues
+bun run lint:md:fix
+
+# Lint YAML files
+bun run lint:yaml
+
+# Create a commit with gitmoji
+bun run commit
+
+# Setup husky hooks (runs automatically on install)
+bun run prepare
+```
+
+---
+
+## Linting Rules
+
+### Markdownlint
+
+Configuration in `.markdownlint.json`:
+
+- Line length limits
+- Heading structure
+- List formatting
+- Code block rules
+
+### Yamllint
+
+Configuration in `.yamllint.yml`:
+
+- Indentation rules
+- Line length
+- Key ordering
+
+---
+
+## Development Workflow
+
+### Daily Process
+
+1. **Pull** - `git pull origin main`
+2. **Branch** - `git checkout -b feature/description`
+3. **Develop** - Make changes following conventions
+4. **Lint** - `bun run lint`
+5. **Commit** - `bun run commit` (uses gitmoji)
+6. **Push** - `git push origin feature/description`
+7. **PR** - Create pull request
+
+### Pre-commit Checklist
+
+- [ ] `bun run lint` passes
+- [ ] Documentation updated if needed
+- [ ] Commit uses gitmoji convention
+- [ ] No sensitive data committed
+
+---
+
+## Issue Templates
+
+### Bug Report
+
+Uses `.github/ISSUE_TEMPLATE/bug_report.yml`:
+
+- Description
+- Steps to reproduce
+- Expected vs actual behavior
+- Environment details
+
+### Feature Request
+
+Uses `.github/ISSUE_TEMPLATE/feature_request.yml`:
+
+- Problem description
+- Proposed solution
+- Alternatives considered
+
+---
+
+*Last updated: 2026-02-03*

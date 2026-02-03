@@ -1,129 +1,109 @@
-# Structure du Projet
+# Project Structure
 
-## 📁 Organisation des dossiers
+## Directory Organization
 
-```
-maxime-lenne-website/
-├── .github/                    # Configuration GitHub Actions
-│   └── workflows/             # Workflows CI/CD
-├── _data/                      # Données statiques
-│   ├── translations.yml        # Traductions FR/EN
-│   └── experiences.yml         # Données Notion
-├── _includes/                  # Composants réutilisables
-│   ├── components/            # Composants UI
-│   └── sections/              # Sections de page
-├── _layouts/                   # Templates de pages
-│   ├── default.html           # Layout de base
-│   ├── page.html              # Pages statiques
-│   └── post.html              # Articles de blog
-├── _sass/                      # Styles SCSS
-│   ├── _variables.scss         # Design tokens
-│   ├── _mixins.scss            # Utilitaires Sass
-│   ├── _base.scss              # Styles de base
-│   ├── components/             # Styles composants
-│   └── utilities/               # Classes utilitaires
-├── _plugins/                   # Plugins personnalisés
-│   ├── notion_fetcher.rb       # Intégration Notion API
-│   └── image_optimizer.rb      # Traitement d'images
-├── assets/                     # Assets statiques
-│   ├── css/                    # CSS compilé
-│   ├── js/                     # Fichiers JavaScript
-│   ├── images/                 # Images optimisées
-│   └── fonts/                  # Polices web
-├── _collections/               # Collections de contenu
-│   ├── _posts/                 # Articles de blog
-│   ├── _experiences/           # Expériences professionnelles
-│   ├── _skills/                # Compétences
-│   └── _testimonials/          # Témoignages
-├── pages/                      # Pages statiques
+```text
+github-repository-template/
+├── .claude/                    # Claude Code configuration
+├── .github/                    # GitHub configuration
+│   ├── workflows/              # CI/CD workflows
+│   │   └── lint.yml            # Markdown and YAML linting
+│   ├── ISSUE_TEMPLATE/         # Issue templates
+│   │   ├── bug_report.yml
+│   │   ├── feature_request.yml
+│   │   └── config.yml
+│   └── pull_request_template.md
 ├── docs/                       # Documentation
-│   ├── AGENTS.md          # Conventions de développement
-│   ├── PROJECT_STRUCTURE.md    # Ce fichier
-│   ├── TECHNICAL_GUIDE.md      # Guide technique avancé
-│   ├── DESIGN_SYSTEM.md        # Système de design
-│   └── CONFORMITY_REPORT.md    # Rapport de conformité
-├── _config.yml                 # Configuration Jekyll
-├── _config.dev.yml             # Configuration développement
-├── _config_prod.yml            # Configuration production
-├── Gemfile                     # Dépendances Ruby
-├── package.json                # Dépendances Node.js
-├── Makefile                    # Commandes automatisées
-├── CLAUDE.md                   # Guide pour assistants IA
-└── README.md                   # Documentation principale
+│   ├── AGENTS.md               # AI assistant guide
+│   ├── PROJECT_STRUCTURE.md    # This file
+│   ├── CONVENTIONS.md          # Code conventions
+│   ├── TECHNICAL_GUIDE.md      # Technical guide
+│   ├── DESIGN_SYSTEM.md        # Design system
+│   ├── COMPONENT_REFERENCE.md  # Component docs
+│   ├── FEATURES.md             # Features list
+│   ├── SCREEN_FLOW.md          # Screen flows
+│   └── TASKS.md                # Task tracking
+├── node_modules/               # Dependencies (Bun)
+├── .gitignore                  # Git ignore rules
+├── .gitmoji.json               # Gitmoji configuration
+├── .markdownlint.json          # Markdownlint rules
+├── .yamllint.yml               # Yamllint configuration
+├── bun.lock                    # Bun lock file
+├── package.json                # Project configuration
+├── renovate.json               # Renovate configuration
+├── CLAUDE.md                   # AI assistant entry point
+├── LICENSE                     # MIT License
+└── README.md                   # Main documentation
 ```
 
-## 🔧 Fichiers de configuration
+---
 
-### Configuration Jekyll
-- **`_config.yml`** - Configuration principale
-- **`_config.dev.yml`** - Configuration développement
-- **`_config_prod.yml`** - Configuration production
+## Configuration Files
 
-### Dépendances
-- **`Gemfile`** - Dépendances Ruby (Jekyll, plugins)
-- **`package.json`** - Dépendances Node.js (assets)
-- **`.tool-versions`** - Versions asdf (Ruby, Node.js)
+### Project Configuration
 
-## 🎨 Architecture
+| File | Purpose |
+|------|---------|
+| `package.json` | Dependencies, scripts, project metadata |
+| `bun.lock` | Locked dependency versions |
+| `.gitmoji.json` | Gitmoji-cli configuration |
 
-### Layouts
-- **`_layouts/default.html`** - Template de base
-- **`_layouts/page.html`** - Pages statiques
-- **`_layouts/post.html`** - Articles de blog
+### Code Quality
 
-### Composants
-- **`_includes/components/`** - Composants UI réutilisables
-- **`_includes/sections/`** - Sections de page
+| File | Purpose |
+|------|---------|
+| `.markdownlint.json` | Markdown linting rules |
+| `.yamllint.yml` | YAML linting rules |
+| `.editorconfig` | Editor settings (if present) |
 
-### Styles
-- **`_sass/_variables.scss`** - Design tokens
-- **`_sass/components/`** - Styles composants
-- **`_sass/utilities/`** - Classes utilitaires
+### CI/CD
 
-## 📝 Contenu
+| File | Purpose |
+|------|---------|
+| `.github/workflows/lint.yml` | Lint on push/PR |
+| `renovate.json` | Automatic dependency updates |
+| `.github/dependabot.yml` | Security updates |
 
-### Collections
-- **`_collections/_posts/`** - Articles de blog
-- **`_collections/_experiences/`** - Expériences professionnelles
-- **`_collections/_skills/`** - Compétences
-- **`_collections/_testimonials/`** - Témoignages
+### Git Hooks
 
-### Pages statiques
-- **`pages/`** - Pages avec support multi-langue
-- **`index.md`** - Page d'accueil
-- **`resume.md`** - Page CV
+| Directory | Purpose |
+|-----------|---------|
+| `.husky/` | Git hooks managed by Husky |
 
-## 🚀 Déploiement
+---
 
-### GitHub Actions
-- **Build automatique** sur push vers main
-- **Sync Notion** quotidien via cron
-- **Déploiement** automatique sur GitHub Pages
+## Documentation (`docs/`)
 
-### Commandes utiles
-```bash
-# Développement
-make serve          # Serveur de développement
-make build          # Build de développement
-make test           # Tests de qualité
+| File | Purpose |
+|------|---------|
+| `AGENTS.md` | Main guide for AI assistants |
+| `PROJECT_STRUCTURE.md` | This file - directory layout |
+| `CONVENTIONS.md` | Code style and git conventions |
+| `TECHNICAL_GUIDE.md` | Technical implementation details |
+| `DESIGN_SYSTEM.md` | UI/UX design tokens |
+| `COMPONENT_REFERENCE.md` | Component documentation |
+| `FEATURES.md` | Epics and user stories |
+| `SCREEN_FLOW.md` | Navigation flows |
+| `TASKS.md` | Project task tracking |
 
-# Production
-make production     # Build de production
-make clean          # Nettoyer les fichiers
-```
+---
 
-## 📚 Documentation
+## GitHub Configuration (`.github/`)
 
-### Guides principaux
-- **`CLAUDE.md`** - Guide pour assistants IA
-- **`docs/AGENTS.md`** - Conventions de développement
-- **`docs/TECHNICAL_GUIDE.md`** - Guide technique avancé
-- **`docs/DESIGN_SYSTEM.md`** - Système de design
-- **`docs/CONFORMITY_REPORT.md`** - Rapport de conformité
+### Workflows
 
-### Fonctionnalités clés
-- **Multi-langue** : Français (défaut) + Anglais
-- **CMS** : Intégration Notion API
-- **Performance** : < 3s chargement, Lighthouse 95+
-- **Accessibilité** : WCAG 2.1 AA
-- **Responsive** : Mobile-first design
+- **`lint.yml`** - Runs markdownlint and yamllint on push/PR
+
+### Issue Templates
+
+- **`bug_report.yml`** - Bug report template
+- **`feature_request.yml`** - Feature request template
+- **`config.yml`** - Issue template configuration
+
+### Pull Request
+
+- **`pull_request_template.md`** - PR template
+
+---
+
+*Last updated: 2026-02-03*
