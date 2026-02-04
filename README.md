@@ -11,10 +11,26 @@
 </p>
 
 <p align="center">
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
-  <a href="https://bun.sh"><img src="https://img.shields.io/badge/Package%20Manager-Bun-black" alt="Bun" /></a>
-  <a href="https://gitmoji.dev"><img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg" alt="Gitmoji" /></a>
-  <a href="https://semantic-release.gitbook.io/"><img src="https://img.shields.io/badge/semantic--release-gitmoji-e10079?logo=semantic-release" alt="semantic-release: gitmoji" /></a>
+<a href="https://github.com/maxime-lenne/github-repository-template/actions?query=workflow%3ALint+branch%3Amaster">
+		<img src="https://img.shields.io/github/actions/workflow/status/maxime-lenne/github-repository-template/lint.yml?branch=master"
+			 alt="Build Status">
+	</a>
+  <a href="https://github.com/maxime-lenne/github-repository-template/actions?query=workflow%3ARelease+branch%3Amaster">
+		<img src="https://img.shields.io/github/actions/workflow/status/maxime-lenne/github-repository-template/release.yml?branch=master"
+			 alt="Build Status">
+	</a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" />
+  </a>
+  <a href="https://bun.sh">
+    <img src="https://img.shields.io/badge/Package%20Manager-Bun-black" alt="Bun" />
+  </a>
+  <a href="https://gitmoji.dev">
+    <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg" alt="Gitmoji" />
+  </a>
+  <a href="https://semantic-release.gitbook.io/">
+    <img src="https://img.shields.io/badge/semantic--release-gitmoji-e10079?logo=semantic-release" alt="semantic-release: gitmoji" />
+</a>
 </p>
 <!-- markdownlint-restore -->
 

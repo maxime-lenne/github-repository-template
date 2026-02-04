@@ -92,7 +92,7 @@ github-repository-template/
 
 ### Workflows
 
-- **`lint.yml`** - Runs markdownlint and yamllint on push/PR
+- **`lint.yml`** - Runs all linters on push/PR
 
 ### Issue Templates
 
