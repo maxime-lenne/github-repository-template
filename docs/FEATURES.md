@@ -1,59 +1,37 @@
 # Features
 
 Application features organized by epics and user stories.
+Each item is linked to a GitHub issue for tracking and status.
 
 ## Epics
 
-### 1. [Epic Name]
-
-Brief description of the epic.
-
-### 2. [Epic Name]
-
-Brief description of the epic.
-
-### 3. [Epic Name]
-
-Brief description of the epic.
+| # | Epic | Description | Issue |
+|---|------|-------------|-------|
+| 1 | [Epic Name] | Brief description of the epic goal and scope (200-400 chars max). | [#1](../../issues/1) |
+| 2 | [Epic Name] | Brief description of the epic goal and scope (200-400 chars max). | [#2](../../issues/2) |
+| 3 | [Epic Name] | Brief description of the epic goal and scope (200-400 chars max). | [#3](../../issues/3) |
 
 ---
 
 ## User Stories
 
-### 1. [Epic Name]
-
-- As a user, I want to [action] so that [benefit]
-- As a user, I want to [action] so that [benefit]
-- As a user, I want to [action] so that [benefit]
-
-### 2. [Epic Name]
-
-- As a user, I want to [action] so that [benefit]
-- As a user, I want to [action] so that [benefit]
-
-### 3. [Epic Name]
-
-- As a user, I want to [action] so that [benefit]
-- As a user, I want to [action] so that [benefit]
+| Epic | User Story | Issue |
+|------|------------|-------|
+| Epic 1 | As a user, I want to [action] so that [benefit] | [#10](../../issues/10) |
+| Epic 1 | As a user, I want to [action] so that [benefit] | [#11](../../issues/11) |
+| Epic 2 | As a user, I want to [action] so that [benefit] | [#20](../../issues/20) |
+| Epic 2 | As a user, I want to [action] so that [benefit] | [#21](../../issues/21) |
+| Epic 3 | As a user, I want to [action] so that [benefit] | [#30](../../issues/30) |
 
 ---
 
 ## Technical Features
 
-- Feature 1
-- Feature 2
-- Feature 3
+| Feature | Description | Issue |
+|---------|-------------|-------|
+| Feature 1 | Brief technical description | [#100](../../issues/100) |
+| Feature 2 | Brief technical description | [#101](../../issues/101) |
 
 ---
 
-## Feature Status
-
-| Feature | Status | Priority |
-|---------|--------|----------|
-| Feature 1 | ✅ Done | High |
-| Feature 2 | 🚧 In Progress | High |
-| Feature 3 | 📋 Planned | Medium |
-
----
-
-*Last updated: [Date]*
+*Status is managed directly on GitHub issues.*
