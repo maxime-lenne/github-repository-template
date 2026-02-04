@@ -65,6 +65,18 @@
         "message": "🔖 Release v${nextRelease.version}\n\n${nextRelease.notes}"
       }
     ],
-    "@semantic-release/github"
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "CHANGELOG.md",
+            "label": "Changelog"
+          }
+        ],
+        "successComment": false,
+        "releasedLabels": false
+      }
+    ]
   ]
 }
