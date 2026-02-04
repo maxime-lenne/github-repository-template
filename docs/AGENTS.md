@@ -26,6 +26,7 @@ Complete guide for AI assistants working on this repository.
 | Node Version | >= 22.11.0 |
 | Git Hooks | Husky + lint-staged |
 | Commit Convention | Gitmoji |
+| Commit Validation | commitlint |
 | Linting | markdownlint, yamllint |
 | Dependency Updates | Renovate, Dependabot |
 | CI/CD | GitHub Actions |
@@ -38,6 +39,7 @@ bun run lint          # Lint markdown and yaml
 bun run lint:md       # Lint markdown only
 bun run lint:md:fix   # Auto-fix markdown
 bun run lint:yaml     # Lint yaml files
+bun run lint:commit   # Validate last commit message
 bun run commit        # Interactive gitmoji commit
 ```
 

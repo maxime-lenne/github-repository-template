@@ -17,6 +17,7 @@
     "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore dist",
     "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --ignore dist --fix",
     "lint:yaml": "yamllint .",
+    "lint:commit": "commitlint --last -V",
     "prepare": "husky",
     "commit": "gitmoji -c",
     "changelog": "conventional-changelog -p gitmoji-config -i CHANGELOG.md -s",
