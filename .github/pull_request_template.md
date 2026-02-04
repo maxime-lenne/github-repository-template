@@ -31,12 +31,19 @@
 
 ## Checklist
 
-- [ ] My code follows the project's style guidelines
 - [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
+- [ ] I have tested this code
+- [ ] My code follows the project's style guidelines
+- [ ] I have verify TODO in code
 - [ ] My changes generate no new warnings
-- [ ] Any dependent changes have been merged and published
+- [ ] I have updated the Readme, changelog, tasks-mep, wiki or other documentation (if relevant)
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have create schema migation (if relevant)
+- [ ] I have make the data migration script (if relevant)
+- - [ ] Any dependent changes have been merged and published
+- [ ] I have update seed (if relevant)
+- [ ] I have tested swagger (if relevant)
+- [ ] I have update Postman collection (if relevant)
 
 ## Screenshots (if applicable)
 
