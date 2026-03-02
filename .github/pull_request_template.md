@@ -40,7 +40,7 @@
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have create schema migation (if relevant)
 - [ ] I have make the data migration script (if relevant)
-- - [ ] Any dependent changes have been merged and published
+- [ ] Any dependent changes have been merged and published
 - [ ] I have update seed (if relevant)
 - [ ] I have tested swagger (if relevant)
 - [ ] I have update Postman collection (if relevant)
