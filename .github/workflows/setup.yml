@@ -58,7 +58,8 @@ jobs:
             --field 'required_status_checks[contexts][]=Markdown Lint' \
             --field 'required_status_checks[contexts][]=YAML Lint' \
             --field 'required_status_checks[contexts][]=Commit Lint' \
-            --field 'restrictions=null'
+            --field 'restrictions=null' \
+          || echo "::warning::Branch protection skipped for 'develop' — requires GitHub Pro (private repo) or a public repository."
 
       - name: Protect main branch (production)
         run: |
@@ -75,4 +76,5 @@ jobs:
             --field 'required_status_checks[contexts][]=Markdown Lint' \
             --field 'required_status_checks[contexts][]=YAML Lint' \
             --field 'required_status_checks[contexts][]=Commit Lint' \
-            --field 'restrictions=null'
+            --field 'restrictions=null' \
+          || echo "::warning::Branch protection skipped for 'main' — requires GitHub Pro (private repo) or a public repository."
