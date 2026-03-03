@@ -1,5 +1,8 @@
 name: Repository Setup
 
+# Requires a secret named ADMIN_TOKEN with a PAT (fine-grained or classic)
+# with repository Administration (read & write) permissions.
+
 on:
   workflow_dispatch:
 
@@ -10,13 +13,13 @@ jobs:
   setup:
     name: Apply Repository Settings
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
       - name: Create develop branch if missing
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           DEFAULT_SHA=$(gh api repos/${{ github.repository }}/git/refs/heads/main --jq '.object.sha')
           gh api repos/${{ github.repository }}/git/refs \
@@ -26,16 +29,12 @@ jobs:
             2>/dev/null || echo "develop branch already exists"
 
       - name: Set default branch to develop
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh api repos/${{ github.repository }} \
             --method PATCH \
             --field default_branch=develop
 
       - name: Configure merge settings (rebase only)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh api repos/${{ github.repository }} \
             --method PATCH \
@@ -45,8 +44,6 @@ jobs:
             --field delete_branch_on_merge=true
 
       - name: Protect develop branch (staging)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh api repos/${{ github.repository }}/branches/develop/protection \
             --method PUT \
@@ -64,8 +61,6 @@ jobs:
             --field 'restrictions=null'
 
       - name: Protect main branch (production)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh api repos/${{ github.repository }}/branches/main/protection \
             --method PUT \
