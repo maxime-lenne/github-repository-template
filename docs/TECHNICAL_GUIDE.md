@@ -22,7 +22,7 @@ Detailed guide for technical implementation aspects.
 
 ### Lint Workflow
 
-The project runs linting on every push and PR to `main`:
+The project runs linting on every push and PR to `develop` and `main`:
 
 ```yaml
 # .github/workflows/lint.yml
@@ -30,9 +30,9 @@ name: Lint
 
 on:
   push:
-    branches: [main]
+    branches: [develop, main]
   pull_request:
-    branches: [main]
+    branches: [develop, main]
 
 jobs:
   markdownlint:

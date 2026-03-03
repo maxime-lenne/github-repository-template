@@ -27,11 +27,11 @@ repository:
   has_downloads: true
 
   # Default branch
-  default_branch: main
+  default_branch: develop
 
-  # Merge settings
-  allow_squash_merge: true
-  allow_merge_commit: true
+  # Merge settings - rebase only to enforce linear history
+  allow_squash_merge: false
+  allow_merge_commit: false
   allow_rebase_merge: true
   delete_branch_on_merge: true
 
@@ -140,9 +140,47 @@ labels:
 # BRANCH PROTECTION
 # =============================================================================
 branches:
-  - name: main
+  # ---------------------------------------------------------------------------
+  # develop - Staging environment (default branch)
+  # ---------------------------------------------------------------------------
+  - name: develop
     protection:
-      # Require pull request reviews before merging
+      # Require pull request before merging (no direct commits)
+      required_pull_request_reviews:
+        required_approving_review_count: 0
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: false
+        dismissal_restrictions:
+          users: []
+          teams: []
+
+      # Require CI to pass before merging
+      required_status_checks:
+        strict: true
+        contexts:
+          - Markdown Lint
+          - YAML Lint
+          - Commit Lint
+
+      # Enforce rules for admins too
+      enforce_admins: false
+
+      # Require linear history (rebase only, no merge commits)
+      required_linear_history: true
+
+      # Prevent force pushes and branch deletion
+      allow_force_pushes: false
+      allow_deletions: false
+
+      # Restrict who can push (set to null to allow anyone with write access)
+      restrictions: null
+
+  # ---------------------------------------------------------------------------
+  # master - Production environment
+  # ---------------------------------------------------------------------------
+  - name: master
+    protection:
+      # Require pull request with mandatory approval before merging
       required_pull_request_reviews:
         required_approving_review_count: 1
         dismiss_stale_reviews: true
@@ -151,18 +189,23 @@ branches:
           users: []
           teams: []
 
-      # Require status checks to pass before merging
+      # Require CI to pass before merging
       required_status_checks:
         strict: true
         contexts:
           - Markdown Lint
           - YAML Lint
+          - Commit Lint
 
       # Enforce rules for admins too
       enforce_admins: false
 
-      # Require linear history (no merge commits)
-      required_linear_history: false
+      # Require linear history (rebase only, no merge commits)
+      required_linear_history: true
+
+      # Prevent force pushes and branch deletion
+      allow_force_pushes: false
+      allow_deletions: false
 
       # Restrict who can push (set to null to allow anyone with write access)
       restrictions: null
