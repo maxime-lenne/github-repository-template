@@ -5,17 +5,9 @@
 # REPOSITORY SETTINGS
 # =============================================================================
 repository:
-  # Repository name (changing this will rename the repository)
-  name: github-repository-template
-
-  # Short description shown on GitHub
-  description: A ready-to-use GitHub repository template with linting, git hooks, and automatic dependency management.
 
   # Homepage URL
   homepage: https://maxime-lenne.fr
-
-  # Topics (comma-separated)
-  topics: template, github
 
   # Visibility
   private: true
