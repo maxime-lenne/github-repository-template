@@ -18,7 +18,7 @@ repository:
   topics: template, github
 
   # Visibility
-  private: false
+  private: true
 
   # Features
   has_issues: true
