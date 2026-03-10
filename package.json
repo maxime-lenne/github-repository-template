@@ -13,7 +13,7 @@
   "packageManager": "bun@1.1.45",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "bun run lint:md && bun run lint:yaml",
+    "lint": "bun run lint:md && bun run lint:yaml && bun run lint:commit",
     "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore dist",
     "lint:md:fix": "markdownlint '**/*.md' --ignore node_modules --ignore dist --fix",
     "lint:yaml": "yamllint .",
