@@ -18,7 +18,7 @@ github-repository-template/
 │   ├── CODEOWNERS              # Default reviewers
 │   ├── settings.yml            # GitHub settings as code
 │   └── pull_request_template.md
-├── .husky/                     # Git hooks (pre-commit, commit-msg)
+├── .husky/                     # Git hooks (pre-commit, commit-msg, post-checkout)
 ├── docs/                       # Documentation
 │   ├── AGENTS.md               # AI assistant guide
 │   ├── PROJECT_STRUCTURE.md    # This file
@@ -31,6 +31,7 @@ github-repository-template/
 │   └── TASKS.md                # Task tracking
 ├── scripts/                    # Repository automation (Bun)
 │   ├── setup-github.js         # Apply .github/settings.yml
+│   ├── clean-branches.js       # Delete local branches whose PR was merged
 │   └── init-template.js        # Template cleanup (deleted after first run)
 ├── node_modules/               # Dependencies (Bun)
 ├── .gitignore                  # Git ignore rules

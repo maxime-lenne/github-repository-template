@@ -42,6 +42,7 @@ bun run lint:yaml     # Lint yaml files
 bun run lint:commit   # Validate last commit message
 bun run commit        # Interactive gitmoji commit
 bun run setup:github  # Apply .github/settings.yml to GitHub
+bun run clean:branches # Delete local branches whose PR was merged
 ```
 
 ---
