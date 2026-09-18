@@ -80,7 +80,7 @@ configuration (Settings app format):
 |---------|---------|
 | `repository` | Default branch `develop`, rebase-only merges, auto-merge, delete merged branches, vulnerability alerts on, Dependabot security updates off |
 | `labels` | Type, priority, status and effort labels |
-| `branches` | Protection of `develop` (PR + CI, no review) and `main` (PR + CI + 1 approval), resolved conversations, linear history, no force push |
+| `branches` | Protection of `develop` (PR + CI, no review, force push allowed for the post-release sync) and `main` (PR + CI + 1 approval, no force push), resolved conversations, linear history |
 
 It is applied by `scripts/setup-github.js`, idempotent:
 
@@ -269,7 +269,7 @@ flowchart TD
   major --> any_bump
   minor --> any_bump
   patch --> any_bump
-  any_bump -->|No| stop([No release, workflow ends])
+  any_bump -->|No| stop([No release])
   any_bump -->|Yes: highest bump wins| version[Compute next version]
 
   version --> notes[release-notes-generator: group commits into sections]
@@ -278,6 +278,8 @@ flowchart TD
   changelog --> git_commit[git: commit 🔖 Release vX.Y.Z with CHANGELOG.md and package.json, push to main with RELEASE_TOKEN]
   git_commit --> tag[Create and push git tag vX.Y.Z]
   tag --> gh_release[github: create GitHub Release with notes and CHANGELOG.md asset]
+  gh_release --> sync[sync-develop: rebase develop onto main, push with lease]
+  stop --> sync
 ```
 
 What each release produces:
@@ -324,11 +326,22 @@ RELEASE_TOKEN=<pat> bun run setup:github --only=secrets
 Without it, the workflow warns and falls back to `GITHUB_TOKEN`, which only
 works when `main` is not protected (e.g. private repository on GitHub Free).
 
-### After a Release
+### After a Release: develop Sync
 
-`main` now has the `🔖 Release` commit (and rebase merges rewrite SHAs):
-re-sync `develop` before the next release PR, see
-[Syncing develop when main advances](#syncing-develop-when-main-advances).
+Rebase merges into `main` rewrite SHAs and the release adds a `🔖 Release`
+commit, so `develop` no longer contains `main`'s tip and the next
+`develop → main` PR would be out of date. The last step of `release.yml`
+(also run when there is no release) calls `scripts/sync-develop.js`:
+
+1. fetch `main` and `develop`; stop if `develop` already contains `main`
+2. rebase `develop` onto `main`: commits already on `main` (same content) are
+   dropped, the others are replayed on top of the `🔖 Release` commit
+3. push `develop` with `--force-with-lease` (lease on the fetched SHA)
+
+`develop` allows force pushes for that reason (GitHub applies the no-force-push
+rule to admins too). On conflict the step fails: run `bun run sync:develop`
+locally and resolve the rebase. See the README for the local commands
+(`git reset --hard origin/develop`, `git rebase origin/develop`).
 
 `conventional-changelog-conventionalcommits` must stay on `^9`: v10 requires
 `conventional-changelog-writer@9`, not yet used by
@@ -362,6 +375,9 @@ bun run release:dry
 
 # Apply .github/settings.yml to GitHub
 bun run setup:github
+
+# Rebase develop onto main and push it (automatic after a release)
+bun run sync:develop
 
 # Setup husky hooks (runs automatically on install)
 bun run prepare
@@ -431,20 +447,16 @@ git checkout -b hotfix/description
 bun run commit
 # → PR: hotfix/description → main (rebase merge)
 
-# Re-sync develop after hotfix lands on main
-git checkout develop
-git fetch origin
-git rebase origin/main          # ✅ never: git merge main
-git push origin develop --force-with-lease
+# Re-sync develop after hotfix lands on main: done by release.yml,
+# or manually (never: git merge main)
+bun run sync:develop
 ```
 
 ### Syncing develop when main advances
 
 ```bash
-git checkout develop
-git fetch origin
-git rebase origin/main          # ✅ keeps linear history
-git push origin develop --force-with-lease
+# Automatic after every push to main (release.yml), manual fallback:
+bun run sync:develop            # rebase develop onto main, push with lease
 # never: git merge main         # ❌ creates a merge commit → blocks rebase PR
 ```
 
