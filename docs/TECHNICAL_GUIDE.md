@@ -19,6 +19,15 @@ Detailed guide for technical implementation aspects.
 
 ## CI/CD
 
+### Workflows
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| `lint.yml` | Push / PR to `develop` and `main` | Markdown, YAML and commit message linting |
+| `release.yml` | PR merged into `main`, manual | semantic-release (see [Semantic Release](#semantic-release)) |
+| `init.yml` | First push of a repository created from the template | Template cleanup, `main` branch, labels (see [Repository Setup](#repository-setup)) |
+| `setup.yml` | Manual | Apply `.github/settings.yml` with an `ADMIN_TOKEN` secret |
+
 ### Lint Workflow
 
 The project runs linting on every push and PR to `develop` and `main`:
@@ -57,6 +66,55 @@ jobs:
 - **PR Checks** - Tests, type checking
 - **Security** - CodeQL analysis
 - **Deploy** - Automated deployment
+
+---
+
+## Repository Setup
+
+### Settings as Code
+
+`.github/settings.yml` is the single source of truth for the GitHub
+configuration (Settings app format):
+
+| Section | Content |
+|---------|---------|
+| `repository` | Default branch `develop`, rebase-only merges, auto-merge, delete merged branches, vulnerability alerts on, Dependabot security updates off |
+| `labels` | Type, priority, status and effort labels |
+| `branches` | Protection of `develop` (PR + CI, no review) and `main` (PR + CI + 1 approval), linear history, no force push |
+
+It is applied by `scripts/setup-github.js`, idempotent:
+
+```bash
+bun run setup:github                              # apply everything
+bun run setup:github --dry-run                    # preview
+bun run setup:github --only=labels,protection     # some sections only
+```
+
+Sections: `branches` (create missing `main` / `develop`), `repository`,
+`security`, `labels`, `protection`. Authentication comes from `GH_TOKEN` /
+`GITHUB_TOKEN` or the local `gh` session; `repository`, `security` and
+`protection` need admin rights. Without local access, run the **Repository
+Setup** workflow (`setup.yml`) after adding an `ADMIN_TOKEN` secret (PAT with
+repository Administration read & write).
+
+Settings GitHub cannot apply are reported as warnings, not errors: on GitHub
+Free, private repositories have no branch protection and no auto-merge.
+
+### New Repository Bootstrap
+
+A repository created from the template only receives the template's default
+branch (`develop`). On that first push, `init.yml` (with `GITHUB_TOKEN`):
+
+1. Runs `scripts/init-template.js`: sets `package.json` name, version `0.0.0`
+   and description, README title and links, `CONTRIBUTING.md` links, empties
+   `CHANGELOG.md` and `docs/TASKS.md`, then deletes itself
+2. Commits `🎉 Initialize project from template` on `develop`
+3. Runs `setup-github.js --only=branches,labels`: creates `main` and the labels
+
+The job is skipped in the template itself (`is_template`) and once
+`scripts/init-template.js` is gone. `GITHUB_TOKEN` has no admin rights nor
+`workflows` permission, hence the remaining manual step
+`bun run setup:github`, and `init.yml` staying in place (safe to delete).
 
 ---
 
@@ -261,6 +319,9 @@ bun run commit
 
 # Preview the next release
 bun run release:dry
+
+# Apply .github/settings.yml to GitHub
+bun run setup:github
 
 # Setup husky hooks (runs automatically on install)
 bun run prepare
