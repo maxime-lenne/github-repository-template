@@ -61,8 +61,7 @@ github-repository-template/
 | File | Purpose |
 |------|---------|
 | `.github/workflows/lint.yml` | Lint on push/PR |
-| `renovate.json` | Automatic dependency updates |
-| `.github/dependabot.yml` | Security updates |
+| `renovate.json` | Automatic dependency updates (Renovate) |
 
 ### Git Hooks
 

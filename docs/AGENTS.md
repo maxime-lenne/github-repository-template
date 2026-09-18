@@ -28,7 +28,7 @@ Complete guide for AI assistants working on this repository.
 | Commit Convention | Gitmoji |
 | Commit Validation | commitlint |
 | Linting | markdownlint, yamllint |
-| Dependency Updates | Renovate, Dependabot |
+| Dependency Updates | Renovate (shared preset, automerge) |
 | CI/CD | GitHub Actions |
 
 ### Available Commands
@@ -71,7 +71,7 @@ Technical implementation guide. Key points:
 
 - **CI/CD**: GitHub Actions workflows (lint on push/PR)
 - **Pre-commit**: Husky runs lint-staged automatically
-- **Dependency management**: Renovate (weekly) + Dependabot (security)
+- **Dependency management**: Renovate (weekly, automerge non-major when CI passes)
 
 ### DESIGN_SYSTEM.md
 

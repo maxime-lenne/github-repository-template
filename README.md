@@ -58,8 +58,9 @@ A ready-to-use GitHub repository template with linting, git hooks, automated cha
 
 ### Dependency Management
 
-- **Renovate** - Automatic dependency updates
-- **Dependabot** - Security alerts and updates
+- **Renovate** - Weekly dependency updates, automerged when CI passes
+  (shared preset [`maxime-lenne/renovate-config`](https://github.com/maxime-lenne/renovate-config))
+- **GitHub vulnerability alerts** - Read by Renovate to open security fixes
 
 ## Installation
 
@@ -149,7 +150,7 @@ Versions are determined automatically by commit emojis:
 
 1. Update `package.json` with your project name
 2. Modify linting rules according to your needs
-3. Adjust Renovate/Dependabot configuration
+3. Install the [Renovate GitHub App](https://github.com/apps/renovate) and adjust `renovate.json` if needed
 4. Update or replace this README
 
 ## License

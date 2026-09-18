@@ -37,15 +37,17 @@ jobs:
   markdownlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
       - run: bun install --frozen-lockfile
       - run: bun run lint:md
 
   yamllint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: pip install yamllint
       - run: yamllint .
 ```
@@ -105,20 +107,38 @@ bun install  # Runs "husky" automatically
 
 ## Dependency Management
 
-### Renovate
+Dependencies (Bun packages, `packageManager`, GitHub Actions, Node version in
+workflows) are updated by [Renovate](https://docs.renovatebot.com/). The
+[Renovate GitHub App](https://github.com/apps/renovate) must be installed on
+the repository.
 
-Renovate is configured to:
+`renovate.json` extends the shared preset
+[`maxime-lenne/renovate-config`](https://github.com/maxime-lenne/renovate-config)
+and only holds project-specific rules:
 
-- Group minor and patch updates
-- Auto-merge patches for devDependencies
-- Run updates on Monday morning (Europe/Paris timezone)
+| Behavior | Value |
+|----------|-------|
+| Schedule | Monday before 10am (Europe/Paris) |
+| Commit / PR title | `⬆️ Update dependency <name> to <version>` |
+| Minimum release age | 3 days before a PR is opened |
+| Grouping | Non-major dev dependencies, non-major GitHub Actions |
+| Automerge | Minor, patch, pin, digest, lock file maintenance (rebase) |
+| Manual review | Major updates, minor updates of `0.x` runtime dependencies |
+| Security | Fix PRs opened immediately from GitHub vulnerability alerts |
 
-### Dependabot
+Automerge needs no human action: Renovate enables GitHub auto-merge
+(`allow_auto_merge` in `.github/settings.yml`), or merges the PR itself once
+all CI checks are green when auto-merge is not available. `main` is never
+targeted: Renovate PRs go to `develop` (default branch) and reach `main`
+through the regular release PR.
 
-Dependabot monitors:
+Project-specific rules in `renovate.json`:
 
-- Bun dependencies (via package.json)
-- GitHub Actions versions
+- `conventional-changelog-conventionalcommits` is held below v10 (see
+  [Semantic Release](#semantic-release))
+
+Dependabot security updates are disabled (`enable_automated_security_fixes:
+false`) to avoid duplicate PRs; GitHub vulnerability alerts stay enabled.
 
 ---
 
@@ -167,7 +187,7 @@ flowchart TD
 
   subgraph workflow [release.yml on ubuntu-latest]
     direction TB
-    checkout[Checkout full history, fetch-depth 0] --> setup[Setup Node 22 and Bun]
+    checkout[Checkout full history, fetch-depth 0] --> setup[Setup Node 24 and Bun from packageManager]
     setup --> install[bun install --frozen-lockfile]
     install --> run[bun run release]
   end
