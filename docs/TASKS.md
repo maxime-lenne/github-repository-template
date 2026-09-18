@@ -5,6 +5,10 @@ Project task tracking.
 ## Backlog
 
 - [ ] Release auto : ajout workflow pour gem, npm ?
+- [ ] Fix releases blocked by `main` protection (semantic-release pushed a release commit to `main` with `GITHUB_TOKEN`)
+- [ ] Decide how `package.json` `version` is maintained (`@semantic-release/npm` not configured, stuck at `1.0.0`)
+- [ ] Automatically clean up local branches whose PR was merged
+- [ ] Update WWT skills `initializing-github-repository` and `retrofitting-github-repository` to the automated bootstrap
 
 ## Completed
 
@@ -23,4 +27,4 @@ Project task tracking.
 
 ---
 
-*Last updated: [Date]*
+*Last updated: 2026-09-18*
