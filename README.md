@@ -225,6 +225,8 @@ Hooks are automatically configured via Husky:
 
 - **pre-commit**: Runs lint-staged on modified files
 - **commit-msg**: Validates commit message format
+- **post-checkout**: Deletes local branches whose PR was merged (at most once
+  per hour; `bun run clean:branches` to run it manually)
 
 ## Version Bumping
 

@@ -23,6 +23,7 @@
     "release": "semantic-release",
     "release:dry": "semantic-release --dry-run",
     "setup:github": "bun scripts/setup-github.js",
+    "clean:branches": "bun scripts/clean-branches.js",
     "sync:develop": "bun scripts/sync-develop.js"
   },
   "devDependencies": {

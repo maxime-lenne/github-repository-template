@@ -154,6 +154,24 @@ Rules:
 - Message must match one of the formats above
 - Maximum header length of 100 characters
 
+### Post-checkout Hook: Local Branch Cleanup
+
+On every branch switch (at most once per hour), `scripts/clean-branches.js`
+deletes local branches whose PR was merged:
+
+- the remote branch is gone (GitHub deletes it on merge)
+- and all its commits are in `origin/develop` or `origin/main`, compared by
+  content with `git cherry` (rebase merges rewrite SHAs, so
+  `git branch --merged` cannot detect them)
+
+Branches with commits missing from `develop` / `main` are kept and listed.
+It is silent when offline or in detached HEAD (rebase in progress).
+
+```bash
+bun run clean:branches            # run now
+bun run clean:branches --dry-run  # only list what would be deleted
+```
+
 ### Setup
 
 Hooks are configured automatically via the `prepare` script:
