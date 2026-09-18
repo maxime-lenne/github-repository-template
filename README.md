@@ -95,16 +95,11 @@ bun run lint:md:fix   # Auto-fix Markdown
 bun run lint:yaml     # Lint YAML files
 ```
 
-### Changelog
-
-```bash
-bun run changelog       # Update changelog with new commits
-bun run changelog:init  # Generate full changelog from scratch
-```
-
 ### Release
 
-Releases are automated via GitHub Actions on push to `main`. Manual release:
+Releases are automated via GitHub Actions when a PR is merged into `main`.
+`CHANGELOG.md` and the GitHub Release notes are generated during the release.
+Manual release:
 
 ```bash
 bun run release:dry   # Preview release
@@ -144,7 +139,7 @@ Versions are determined automatically by commit emojis:
 | File | Purpose |
 |------|---------|
 | `.gitmoji.json` | Gitmoji-cli settings |
-| `.releaserc.json` | Semantic-release config |
+| `release.config.js` | Semantic-release config |
 | `.markdownlint.json` | Markdown linting rules |
 | `.yamllint.yml` | YAML linting rules |
 | `.editorconfig` | Editor settings |

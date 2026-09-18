@@ -12,7 +12,6 @@ Detailed guide for technical implementation aspects.
 | Staged Files | lint-staged | ^17.5.1 |
 | Commit Tool | gitmoji-cli | ^9.7.0 |
 | Commit Lint | commitlint | ^21.2.2 |
-| Changelog | conventional-changelog-cli | ^5.0.0 |
 | Release | semantic-release | ^25.0.9 |
 | Markdown Lint | markdownlint-cli | ^0.49.1 |
 
@@ -123,25 +122,10 @@ Dependabot monitors:
 
 ---
 
-## Changelog
-
-Generate changelogs from commit history using gitmoji and conventional commits:
-
-```bash
-# Update changelog with new commits
-bun run changelog
-
-# Generate full changelog from scratch
-bun run changelog:init
-```
-
-The changelog is generated in `CHANGELOG.md` and groups commits by type (features, fixes, etc.).
-
----
-
 ## Semantic Release
 
-Automated versioning and releases based on commit messages:
+Automated versioning, release notes and `CHANGELOG.md` based on commit
+messages. Configuration lives in `release.config.js`:
 
 ```bash
 # Run release (usually done by CI)
@@ -151,23 +135,86 @@ bun run release
 bun run release:dry
 ```
 
-### Version Bumping
+### Version Bumping and Release Notes
 
-Versions are determined by gitmoji:
+The commit header is parsed so that the leading gitmoji (unicode or
+`:shortcode:`) or, without emoji, the conventional type becomes the commit
+type. The same table drives the version bump and the release notes section:
 
-| Emoji | Version Bump |
-|-------|--------------|
-| 💥 | Major (breaking change) |
-| ✨ 🎉 | Minor (new feature) |
-| 🐛 🚑️ 🩹 ⚡️ 🔒️ 🚀 ♻️ ⬆️ ⬇️ | Patch (fix/improvement) |
+| Gitmoji | Conventional | Version Bump | Release notes section |
+|---------|--------------|--------------|-----------------------|
+| 💥 | `type!:` | Major | 💥 Breaking Changes |
+| ✨ 🎉 | `feat` | Minor | ✨ Features |
+| 🐛 🚑️ 🩹 | `fix` | Patch | 🐛 Bug Fixes |
+| 🔒️ | | Patch | 🔒 Security |
+| ⚡️ | `perf` | Patch | ⚡ Performance |
+| ♻️ | `refactor` | Patch | ♻️ Refactoring |
+| 🚀 | | Patch | 🚀 Deployment |
+| ⬆️ ⬇️ | | Patch | ⬆️ Dependencies |
+| Others (📝 🔧 ✅ ...) | `docs`, `chore`, `ci`... | None | Not listed |
 
-### CI/CD Integration
+A `BREAKING CHANGE:` footer always triggers a major release. Hybrid commits
+(`✨ feat(api): add endpoint`) are classified by their gitmoji.
+
+### Release Process
 
 Releases are automated via GitHub Actions (`.github/workflows/release.yml`):
 
-- Triggered on push to `main`
-- Creates GitHub releases with changelog
-- Updates `CHANGELOG.md` and `package.json`
+```mermaid
+flowchart TD
+  trigger_pr[PR develop to main merged] --> workflow
+  trigger_manual[Manual run: workflow_dispatch] --> workflow
+
+  subgraph workflow [release.yml on ubuntu-latest]
+    direction TB
+    checkout[Checkout full history, fetch-depth 0] --> setup[Setup Node 22 and Bun]
+    setup --> install[bun install --frozen-lockfile]
+    install --> run[bun run release]
+  end
+
+  run --> last_tag[Find last release tag vX.Y.Z on main]
+  last_tag --> commits[Collect commits since last tag]
+
+  subgraph analyze [commit-analyzer]
+    commits --> parse[Parse header: gitmoji or conventional type]
+    parse --> rules{Match releaseRules}
+    rules -->|💥, type! or BREAKING CHANGE| major[major]
+    rules -->|✨ 🎉 or feat| minor[minor]
+    rules -->|🐛 🚑 🩹 ⚡ 🔒 🚀 ♻ ⬆ ⬇ or fix, perf, refactor| patch[patch]
+    rules -->|anything else: 📝 🔧 docs chore...| none[no bump]
+  end
+
+  none --> any_bump{At least one bump?}
+  major --> any_bump
+  minor --> any_bump
+  patch --> any_bump
+  any_bump -->|No| stop([No release, workflow ends])
+  any_bump -->|Yes: highest bump wins| version[Compute next version]
+
+  version --> notes[release-notes-generator: group commits into sections]
+  notes --> changelog[changelog: prepend notes to CHANGELOG.md]
+  changelog --> git_commit[git: commit 🔖 Release vX.Y.Z with CHANGELOG.md and push to main]
+  git_commit --> tag[Create and push git tag vX.Y.Z]
+  tag --> gh_release[github: create GitHub Release with notes and CHANGELOG.md asset]
+```
+
+What each release produces:
+
+| Output | Produced by | Content |
+|--------|-------------|---------|
+| Version number | `@semantic-release/commit-analyzer` | Highest bump among commits since last tag |
+| Release notes | `@semantic-release/release-notes-generator` | Commits grouped by section, see table above |
+| `CHANGELOG.md` | `@semantic-release/changelog` | Release notes prepended to the file |
+| Release commit | `@semantic-release/git` | `🔖 Release vX.Y.Z` pushed to `main` |
+| Git tag | semantic-release core | `vX.Y.Z` on the release commit |
+| GitHub Release | `@semantic-release/github` | Release notes + `CHANGELOG.md` attached |
+
+`@semantic-release/npm` is not configured, so the `version` field of
+`package.json` is not updated: the git tag is the source of truth.
+
+`conventional-changelog-conventionalcommits` must stay on `^9`: v10 requires
+`conventional-changelog-writer@9`, not yet used by
+`@semantic-release/release-notes-generator@14`.
 
 ---
 
@@ -192,8 +239,8 @@ bun run lint:yaml
 # Create a commit with gitmoji
 bun run commit
 
-# Generate/update changelog
-bun run changelog
+# Preview the next release
+bun run release:dry
 
 # Setup husky hooks (runs automatically on install)
 bun run prepare
@@ -310,4 +357,4 @@ Uses `.github/ISSUE_TEMPLATE/feature_request.yml`:
 
 ---
 
-*Last updated: 2026-03-03*
+*Last updated: 2026-09-18*
