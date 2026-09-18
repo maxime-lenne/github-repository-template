@@ -168,8 +168,9 @@ branches:
       # Require linear history (rebase only, no merge commits)
       required_linear_history: true
 
-      # Prevent force pushes and branch deletion
-      allow_force_pushes: false
+      # Force pushes allowed: the release workflow rebases develop onto main
+      # after each release (scripts/sync-develop.js). No branch deletion.
+      allow_force_pushes: true
       allow_deletions: false
 
       # Restrict who can push (set to null to allow anyone with write access)

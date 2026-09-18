@@ -190,6 +190,35 @@ protection: only a repository admin can. The workflow therefore needs a
 Without `RELEASE_TOKEN`, the release job logs a warning and fails when pushing
 the release commit to the protected `main`.
 
+#### After a Release: `develop` Is Re-synced Automatically
+
+Rebase merges rewrite SHAs and the release adds a `🔖 Release` commit to `main`,
+so `develop` must be rebased onto `main` before the next `develop → main` PR.
+The release workflow does it right after the release (`bun run sync:develop`,
+force push with lease, allowed on `develop` for that purpose). Commits already
+on `main` are dropped, `develop` then contains the release commit.
+
+On your machine afterwards:
+
+```bash
+# develop never holds local commits: align it on the remote
+git switch develop
+git fetch origin
+git reset --hard origin/develop
+
+# branch in progress: replay it on the new develop
+git switch feature/my-branch
+git rebase origin/develop
+```
+
+If the workflow reports a conflict (rare: `develop` changed the same lines as
+the release commit), sync manually:
+
+```bash
+git switch develop && git fetch origin && git reset --hard origin/develop
+bun run sync:develop        # rebase develop onto main, push with lease
+```
+
 ### Git Hooks
 
 Hooks are automatically configured via Husky:
