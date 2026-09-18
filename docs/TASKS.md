@@ -4,9 +4,7 @@ Project task tracking.
 
 ## Backlog
 
-- [ ] Release auto
-- [ ]
--
+- [ ] Release auto : ajout workflow pour gem, npm ?
 
 ## Completed
 
