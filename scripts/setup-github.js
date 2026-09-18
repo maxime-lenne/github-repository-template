@@ -6,11 +6,15 @@
 //   bun run setup:github --dry-run            # show what would change
 //   bun run setup:github --only=labels,protection
 //
-// Sections: branches, repository, security, labels, protection
+// Sections: branches, repository, security, labels, protection, secrets
+// Secrets: RELEASE_TOKEN is stored as a repository secret when set in the env
+//   RELEASE_TOKEN=<admin PAT> bun run setup:github --only=secrets
 // Auth: GH_TOKEN or GITHUB_TOKEN env var, otherwise the local `gh` CLI session.
 // Repository settings, security and protection require admin rights.
 
-const SECTIONS = ['branches', 'repository', 'security', 'labels', 'protection'];
+const SECTIONS = ['branches', 'repository', 'security', 'labels', 'protection', 'secrets'];
+// Repository secrets copied from the environment when present
+const SECRETS = ['RELEASE_TOKEN'];
 const SECURITY_KEYS = ['enable_vulnerability_alerts', 'enable_automated_security_fixes'];
 const API = 'https://api.github.com';
 
@@ -174,12 +178,38 @@ async function setupProtection() {
   }
 }
 
+async function setupSecrets() {
+  for (const name of SECRETS) {
+    const value = process.env[name];
+    if (!value) {
+      log.warn(`${name} not set in the environment: secret left unchanged`);
+      continue;
+    }
+    if (dryRun) {
+      log.plan(`set secret ${name}`);
+      continue;
+    }
+    // The value goes through stdin, never through the command line
+    const result = Bun.spawnSync(['gh', 'secret', 'set', name, '--repo', repo], {
+      stdin: new TextEncoder().encode(value),
+      stderr: 'pipe',
+      env: { ...process.env, GH_TOKEN: token },
+    });
+    if (result.success) {
+      log.ok(`set secret ${name}`);
+    } else {
+      log.error(`set secret ${name}: ${result.stderr.toString().trim()}`);
+    }
+  }
+}
+
 const handlers = {
   branches: setupBranches,
   repository: setupRepository,
   security: setupSecurity,
   labels: setupLabels,
   protection: setupProtection,
+  secrets: setupSecrets,
 };
 
 console.log(`Applying .github/settings.yml to ${repo}${dryRun ? ' (dry run)' : ''}`);

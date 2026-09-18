@@ -24,7 +24,7 @@ Detailed guide for technical implementation aspects.
 | Workflow | Trigger | Purpose |
 |----------|---------|---------|
 | `lint.yml` | Push / PR to `develop` and `main` | Markdown, YAML and commit message linting |
-| `release.yml` | PR merged into `main`, manual | semantic-release (see [Semantic Release](#semantic-release)) |
+| `release.yml` | Push to `main` (merged PR), manual | semantic-release (see [Semantic Release](#semantic-release)) |
 | `init.yml` | First push of a repository created from the template | Template cleanup, `main` branch, labels (see [Repository Setup](#repository-setup)) |
 | `setup.yml` | Manual | Apply `.github/settings.yml` with an `ADMIN_TOKEN` secret |
 
@@ -91,7 +91,8 @@ bun run setup:github --only=labels,protection     # some sections only
 ```
 
 Sections: `branches` (create missing `main` / `develop`), `repository`,
-`security`, `labels`, `protection`. Authentication comes from `GH_TOKEN` /
+`security`, `labels`, `protection`, `secrets` (stores `RELEASE_TOKEN` when it
+is set in the environment, see [Release Token](#release-token)). Authentication comes from `GH_TOKEN` /
 `GITHUB_TOKEN` or the local `gh` session; `repository`, `security` and
 `protection` need admin rights. Without local access, run the **Repository
 Setup** workflow (`setup.yml`) after adding an `ADMIN_TOKEN` secret (PAT with
@@ -240,7 +241,9 @@ Releases are automated via GitHub Actions (`.github/workflows/release.yml`):
 
 ```mermaid
 flowchart TD
-  trigger_pr[PR develop to main merged] --> workflow
+  trigger_pr[PR develop to main merged: push to main] --> guard{Head commit is 🔖 Release?}
+  guard -->|Yes| skip([Skipped: release commit itself])
+  guard -->|No| workflow
   trigger_manual[Manual run: workflow_dispatch] --> workflow
 
   subgraph workflow [release.yml on ubuntu-latest]
@@ -270,8 +273,9 @@ flowchart TD
   any_bump -->|Yes: highest bump wins| version[Compute next version]
 
   version --> notes[release-notes-generator: group commits into sections]
-  notes --> changelog[changelog: prepend notes to CHANGELOG.md]
-  changelog --> git_commit[git: commit 🔖 Release vX.Y.Z with CHANGELOG.md and push to main]
+  notes --> npm[npm: set version in package.json, no publish]
+  npm --> changelog[changelog: prepend notes to CHANGELOG.md]
+  changelog --> git_commit[git: commit 🔖 Release vX.Y.Z with CHANGELOG.md and package.json, push to main with RELEASE_TOKEN]
   git_commit --> tag[Create and push git tag vX.Y.Z]
   tag --> gh_release[github: create GitHub Release with notes and CHANGELOG.md asset]
 ```
@@ -282,13 +286,49 @@ What each release produces:
 |--------|-------------|---------|
 | Version number | `@semantic-release/commit-analyzer` | Highest bump among commits since last tag |
 | Release notes | `@semantic-release/release-notes-generator` | Commits grouped by section, see table above |
-| `CHANGELOG.md` | `@semantic-release/changelog` | Release notes prepended to the file |
-| Release commit | `@semantic-release/git` | `🔖 Release vX.Y.Z` pushed to `main` |
+| `package.json` version | `@semantic-release/npm` (`npmPublish: false`) | `vX.Y.Z` without the `v`, nothing published to npm |
+| `CHANGELOG.md` | `@semantic-release/changelog` | Release notes inserted below the `# Changelog` title |
+| Release commit | `@semantic-release/git` | `🔖 Release vX.Y.Z` with `CHANGELOG.md` + `package.json`, pushed to `main` |
 | Git tag | semantic-release core | `vX.Y.Z` on the release commit |
 | GitHub Release | `@semantic-release/github` | Release notes + `CHANGELOG.md` attached |
 
-`@semantic-release/npm` is not configured, so the `version` field of
-`package.json` is not updated: the git tag is the source of truth.
+### Trigger
+
+`release.yml` runs on every push to `main`, i.e. when the `develop → main` PR
+is merged. It cannot run on the `pull_request` event: semantic-release never
+publishes from a pull request context. The push of the `🔖 Release` commit
+itself is skipped by the job condition. Git hooks are disabled in the job
+(`HUSKY: 0`) so lint-staged and commitlint do not run on the release commit.
+
+### Release Token
+
+The release commit is pushed to `main`, which is protected (PR, checks,
+review). `GITHUB_TOKEN` cannot bypass it, and on a personal account GitHub
+Actions cannot be added as a bypass actor. Repository admins can
+(`enforce_admins: false`), so the workflow uses a `RELEASE_TOKEN` secret: a
+personal access token of a repository admin.
+
+Create it once and reuse it for all repositories:
+
+- Fine-grained PAT, resource owner = your account, **All repositories**,
+  permissions: Contents, Issues, Pull requests (read and write)
+- Or a classic PAT with the `repo` scope
+
+Store it in each repository:
+
+```bash
+RELEASE_TOKEN=<pat> bun run setup:github --only=secrets
+# or: gh secret set RELEASE_TOKEN
+```
+
+Without it, the workflow warns and falls back to `GITHUB_TOKEN`, which only
+works when `main` is not protected (e.g. private repository on GitHub Free).
+
+### After a Release
+
+`main` now has the `🔖 Release` commit (and rebase merges rewrite SHAs):
+re-sync `develop` before the next release PR, see
+[Syncing develop when main advances](#syncing-develop-when-main-advances).
 
 `conventional-changelog-conventionalcommits` must stay on `^9`: v10 requires
 `conventional-changelog-writer@9`, not yet used by

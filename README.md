@@ -73,6 +73,9 @@ one workflow run and one command.
 - [GitHub CLI](https://cli.github.com/) logged in (`gh auth login`) and [Bun](https://bun.sh)
 - [Renovate GitHub App](https://github.com/apps/renovate) installed on
   **All repositories**: every new repository is then covered automatically
+- A personal access token of yours, exported as `RELEASE_TOKEN`: the release
+  workflow uses it to push the `🔖 Release` commit to the protected `main`
+  (see [Release Token](docs/TECHNICAL_GUIDE.md#release-token))
 
 ### Steps
 
@@ -89,6 +92,7 @@ git pull
 bun install
 
 # 4. Apply GitHub settings (uses your gh session, admin rights)
+#    and store RELEASE_TOKEN as a repository secret
 bun run setup:github
 ```
 
@@ -97,7 +101,7 @@ bun run setup:github
 | When | What |
 |------|------|
 | First push (`init.yml` workflow) | `package.json` name / version `0.0.0` / description, README title and links, empty `CHANGELOG.md` and `docs/TASKS.md`, `main` branch created next to `develop`, labels |
-| `bun run setup:github` | Default branch `develop`, rebase-only merges, auto-merge, delete merged branches, vulnerability alerts on, Dependabot security updates off, branch protection on `develop` and `main`, labels |
+| `bun run setup:github` | Default branch `develop`, rebase-only merges, auto-merge, delete merged branches, vulnerability alerts on, Dependabot security updates off, branch protection on `develop` and `main`, labels, `RELEASE_TOKEN` secret |
 | Renovate (app installed) | Dependency Dashboard issue, weekly update PRs, automerge of non-major updates when CI passes |
 
 All GitHub settings come from [`.github/settings.yml`](.github/settings.yml).
@@ -150,9 +154,11 @@ bun run setup:github --dry-run  # Preview changes
 
 ### Release
 
-Releases are automated via GitHub Actions when a PR is merged into `main`.
-`CHANGELOG.md` and the GitHub Release notes are generated during the release.
-Manual release:
+Releases are automated via GitHub Actions when a PR is merged into `main`:
+the version is computed from the commits since the last release, then
+`package.json`, `CHANGELOG.md`, a `🔖 Release vX.Y.Z` commit, the `vX.Y.Z` tag
+and a GitHub Release (notes + `CHANGELOG.md`) are produced. Requires the
+`RELEASE_TOKEN` secret. Manual release:
 
 ```bash
 bun run release:dry   # Preview release
