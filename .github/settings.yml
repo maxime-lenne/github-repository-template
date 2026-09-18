@@ -162,6 +162,9 @@ branches:
       # Enforce rules for admins too
       enforce_admins: false
 
+      # Require all review conversations to be resolved before merging
+      required_conversation_resolution: true
+
       # Require linear history (rebase only, no merge commits)
       required_linear_history: true
 
@@ -196,6 +199,9 @@ branches:
 
       # Enforce rules for admins too
       enforce_admins: false
+
+      # Require all review conversations to be resolved before merging
+      required_conversation_resolution: true
 
       # Require linear history (rebase only, no merge commits)
       required_linear_history: true

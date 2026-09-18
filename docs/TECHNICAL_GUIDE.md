@@ -80,7 +80,7 @@ configuration (Settings app format):
 |---------|---------|
 | `repository` | Default branch `develop`, rebase-only merges, auto-merge, delete merged branches, vulnerability alerts on, Dependabot security updates off |
 | `labels` | Type, priority, status and effort labels |
-| `branches` | Protection of `develop` (PR + CI, no review) and `main` (PR + CI + 1 approval), linear history, no force push |
+| `branches` | Protection of `develop` (PR + CI, no review) and `main` (PR + CI + 1 approval), resolved conversations, linear history, no force push |
 
 It is applied by `scripts/setup-github.js`, idempotent:
 
