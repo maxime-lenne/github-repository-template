@@ -1,5 +1,7 @@
-# Repository Settings - Managed by https://github.com/apps/settings
-# Install the app and changes to this file will be synced to GitHub
+# Repository Settings - single source of truth for the GitHub configuration
+# Applied by `bun run setup:github` (scripts/setup-github.js) with your gh
+# session, or by the "Repository Setup" workflow with an ADMIN_TOKEN secret.
+# The format is compatible with the Settings app (https://github.com/apps/settings).
 
 # =============================================================================
 # REPOSITORY SETTINGS
@@ -16,7 +18,6 @@ repository:
   has_issues: true
   has_projects: true
   has_wiki: false
-  has_downloads: true
 
   # Default branch
   default_branch: develop
@@ -117,7 +118,7 @@ labels:
     description: Good for newcomers
 
   - name: help wanted
-    color: 008672
+    color: '008672'
     description: Extra attention is needed
 
   - name: wontfix
@@ -172,9 +173,9 @@ branches:
       restrictions: null
 
   # ---------------------------------------------------------------------------
-  # master - Production environment
+  # main - Production environment
   # ---------------------------------------------------------------------------
-  - name: master
+  - name: main
     protection:
       # Require pull request with mandatory approval before merging
       required_pull_request_reviews:
