@@ -1,8 +1,15 @@
 name: Release
 
+# Runs semantic-release when commits land on main (a merged PR pushes to main).
+# A pull_request event cannot be used: semantic-release never publishes from a
+# pull request context.
+#
+# The 🔖 Release commit is pushed to the protected main branch: this needs a
+# RELEASE_TOKEN secret holding a PAT of a repository admin (admins bypass the
+# protection, GITHUB_TOKEN cannot). See docs/TECHNICAL_GUIDE.md#release-token.
+
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches: [main]
   workflow_dispatch:
 
@@ -14,14 +21,26 @@ permissions:
 jobs:
   release:
     name: Semantic Release
-    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    # Skip the push of the release commit itself
+    if: ${{ !startsWith(github.event.head_commit.message, '🔖 Release') }}
     runs-on: ubuntu-latest
+    env:
+      # No git hooks in CI: lint-staged/commitlint must not run on the release commit
+      HUSKY: 0
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Check release token
+        env:
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          if [ -z "$RELEASE_TOKEN" ]; then
+            echo "::warning::RELEASE_TOKEN secret is missing: the release commit cannot be pushed to a protected main branch"
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -38,5 +57,5 @@ jobs:
 
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
         run: bun run release
