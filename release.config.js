@@ -67,10 +67,20 @@ export default {
         },
       },
     ],
+    // Sets the version in package.json (committed by @semantic-release/git);
+    // nothing is published to npm
+    [
+      '@semantic-release/npm',
+      {
+        npmPublish: false,
+      },
+    ],
     [
       '@semantic-release/changelog',
       {
         changelogFile: 'CHANGELOG.md',
+        // Kept at the top of the file, release notes are inserted below
+        changelogTitle: '# Changelog\n\nAll notable changes to this project will be documented in this file.',
       },
     ],
     [
