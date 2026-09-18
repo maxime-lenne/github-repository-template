@@ -4,14 +4,14 @@ Project task tracking.
 
 ## Backlog
 
-- [ ] Renovate vs dependabot
-- [ ] merge auto renovate
 - [ ] Release auto
 - [ ]
 -
 
 ## Completed
 
+- [x] Renovate vs dependabot
+- [x] merge auto renovate
 - [x] workflow release doit déclencher la mise à jour du changelog et l'ajouter à la release github
 - [x] clean all docs
 - [x] get issue and pr template from frizbiz

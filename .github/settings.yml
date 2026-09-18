@@ -26,9 +26,13 @@ repository:
   allow_merge_commit: false
   allow_rebase_merge: true
   delete_branch_on_merge: true
+  # Required for Renovate to use GitHub native auto-merge
+  allow_auto_merge: true
 
   # Security
-  enable_automated_security_fixes: true
+  # Vulnerability alerts are read by Renovate, which opens the fix PRs:
+  # Dependabot security updates are disabled to avoid duplicate PRs
+  enable_automated_security_fixes: false
   enable_vulnerability_alerts: true
 
 # =============================================================================
