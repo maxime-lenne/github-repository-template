@@ -6,15 +6,15 @@ Detailed guide for technical implementation aspects.
 
 | Category | Technology | Version |
 |----------|------------|---------|
-| Package Manager | Bun | >= 1.1.45 |
-| Node | Node.js | >= 22.11.0 |
+| Package Manager | Bun | 1.4.2 |
+| Node | Node.js | ^22.14.0 \|\| >= 24.10.0 |
 | Git Hooks | Husky | ^9.1.7 |
-| Staged Files | lint-staged | ^16.2.7 |
+| Staged Files | lint-staged | ^17.5.1 |
 | Commit Tool | gitmoji-cli | ^9.7.0 |
-| Commit Lint | commitlint | ^20.4.1 |
-| Changelog | conventional-changelog | ^5.0.0 |
-| Release | semantic-release | ^25.0.3 |
-| Markdown Lint | markdownlint-cli | ^0.47.0 |
+| Commit Lint | commitlint | ^21.2.2 |
+| Changelog | conventional-changelog-cli | ^5.0.0 |
+| Release | semantic-release | ^25.0.9 |
+| Markdown Lint | markdownlint-cli | ^0.49.1 |
 
 ---
 

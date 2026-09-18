@@ -23,7 +23,7 @@ Complete guide for AI assistants working on this repository.
 | Category | Technology |
 |----------|------------|
 | Package Manager | Bun |
-| Node Version | >= 22.11.0 |
+| Node Version | ^22.14.0 \|\| >= 24.10.0 |
 | Git Hooks | Husky + lint-staged |
 | Commit Convention | Gitmoji |
 | Commit Validation | commitlint |
