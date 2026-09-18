@@ -157,13 +157,38 @@ bun run setup:github --dry-run  # Preview changes
 Releases are automated via GitHub Actions when a PR is merged into `main`:
 the version is computed from the commits since the last release, then
 `package.json`, `CHANGELOG.md`, a `🔖 Release vX.Y.Z` commit, the `vX.Y.Z` tag
-and a GitHub Release (notes + `CHANGELOG.md`) are produced. Requires the
-`RELEASE_TOKEN` secret. Manual release:
+and a GitHub Release (notes + `CHANGELOG.md`) are produced.
 
 ```bash
-bun run release:dry   # Preview release
-bun run release       # Execute release
+bun run release:dry   # Preview the next version and notes locally
 ```
+
+#### Release Token (required)
+
+The `🔖 Release` commit is pushed to `main`, which is protected. On a personal
+account, neither `GITHUB_TOKEN` nor the GitHub Actions app can bypass that
+protection: only a repository admin can. The workflow therefore needs a
+`RELEASE_TOKEN` secret holding a personal access token (PAT) of yours.
+
+1. **Create the PAT once**, reused by all your repositories
+   ([GitHub → Settings → Developer settings → Personal access tokens](https://github.com/settings/tokens)):
+   - fine-grained token: resource owner = your account, **All repositories**,
+     repository permissions **Contents**, **Issues** and **Pull requests** in
+     read and write
+   - or a classic token with the `repo` scope
+2. **Store it in the repository** (on each new repository):
+
+   ```bash
+   RELEASE_TOKEN=<pat> bun run setup:github --only=secrets
+   # or: gh secret set RELEASE_TOKEN
+   ```
+
+   Keep the PAT in your password manager or shell environment: with
+   `RELEASE_TOKEN` exported, a plain `bun run setup:github` stores it too.
+3. **Renew it** before it expires, then store it again with the same command.
+
+Without `RELEASE_TOKEN`, the release job logs a warning and fails when pushing
+the release commit to the protected `main`.
 
 ### Git Hooks
 
