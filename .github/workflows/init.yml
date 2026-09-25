@@ -19,7 +19,9 @@ jobs:
   init:
     name: Initialize from template
     runs-on: ubuntu-latest
-    if: ${{ !github.event.repository.is_template }}
+    # Only on the default branch: with "Include all branches", every copied
+    # branch triggers a push, the others must not be initialized too
+    if: ${{ !github.event.repository.is_template && github.ref_name == github.event.repository.default_branch }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -53,6 +55,23 @@ jobs:
           git add -A
           git commit -m "🎉 Initialize project from template"
           git push
+
+      # "Include all branches" copies each branch with its own root commit:
+      # main would share no history with develop. Delete the copies so the
+      # next step recreates them from the default branch.
+      - name: Drop branches copied from the template
+        if: steps.pending.outputs.value == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          for branch in main develop; do
+            [ "$branch" = "$DEFAULT_BRANCH" ] && continue
+            if gh api "repos/$GITHUB_REPOSITORY/branches/$branch" --silent 2>/dev/null; then
+              gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/$branch"
+              echo "Deleted $branch copied from the template"
+            fi
+          done
 
       - name: Create branches and labels
         if: steps.pending.outputs.value == 'true'
