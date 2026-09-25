@@ -110,10 +110,14 @@ branch (`develop`). On that first push, `init.yml` (with `GITHUB_TOKEN`):
    and description, README title and links, `CONTRIBUTING.md` links, empties
    `CHANGELOG.md` and `docs/TASKS.md`, then deletes itself
 2. Commits `🎉 Initialize project from template` on `develop`
-3. Runs `setup-github.js --only=branches,labels`: creates `main` and the labels
+3. Deletes `main` if it was copied from the template ("Include all branches"):
+   GitHub gives each copied branch its own root commit, so it would share no
+   history with `develop`
+4. Runs `setup-github.js --only=branches,labels`: creates `main` from
+   `develop` and the labels
 
-The job is skipped in the template itself (`is_template`) and once
-`scripts/init-template.js` is gone. `GITHUB_TOKEN` has no admin rights nor
+The job is skipped in the template itself (`is_template`), on pushes to other
+branches than the default one, and once `scripts/init-template.js` is gone. `GITHUB_TOKEN` has no admin rights nor
 `workflows` permission, hence the remaining manual step
 `bun run setup:github`, and `init.yml` staying in place (safe to delete).
 
